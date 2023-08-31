@@ -1,7 +1,7 @@
 const db = require("../config/database"); //this imprt the db con from config
 const { hash, compare, hashSync } = require("bcrypt");
 const { createToken } = require("../middleware/AuthenticateUser");
-class users {
+class Users {
   fetchUsers(req, res) {
     const query = `
         SELECT userID, firstName, lastName,
@@ -129,4 +129,4 @@ class users {
     });
   }
 }
-module.exports = users;
+module.exports = Users;

@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const {verifyAToken} = require('../middleware/AuthenticateUser')
 const router = express.Router()
 const productController = require("../controllers/Product");
+const Users = require('../models/user');
+const users = new Users();
 //Import all model's objects
 
 //User's router
@@ -56,4 +58,4 @@ router.put("/products/:id", updateProduct);
 router.delete("/products/:id", deleteProduct);
 
 // export default router
-module.exports = router, verifyAToken;
+module.exports = {router, verifyAToken};
