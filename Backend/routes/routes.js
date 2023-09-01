@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const {verifyAToken} = require('../middleware/AuthenticateUser')
 const router = express.Router()
 const productController = require("../controllers/Product");
+const CartController = require("../controllers/Cart");
 const Users = require('../models/user');
 const users = new Users();
 //Import all model's objects
@@ -56,6 +57,28 @@ router.put("/products/:id", updateProduct);
 
 // Delete Product
 router.delete("/products/:id", deleteProduct);
+
+const {
+  showCart,
+  showCartById,
+  createCart,
+  updateCart,
+  deleteCart,
+} = CartController;
+// Get All Cart
+router.get("/cart", showCart);
+
+// Get Single Cart
+router.get("/cart/:id", showCartById);
+
+// Create New Cart
+router.post("/cart", createCart);
+
+// Update Cart
+router.put("/cart/:id", updateCart);
+
+// Delete Cart
+router.delete("/cart/:id", deleteCart);
 
 // export default router
 module.exports = {router, verifyAToken};

@@ -5,7 +5,7 @@ class Users {
   fetchUsers(req, res) {
     const query = `
         SELECT userID, firstName, lastName,
-        gender, userDOB, userRole, emailAdd,
+        gender, userDOB, userRole, emailAdd, userPass,
         profileUrl
         FROM Users;
         `;
@@ -20,7 +20,7 @@ class Users {
   fetchUser(req, res) {
     const query = `
         SELECT userID, firstName, lastName,
-        gender, userDOB, userRole, emailAdd,
+        gender, userDOB, userRole, emailAdd, userPass,
         profileUrl
         FROM Users
         WHERE userID = ${req.params.id};
@@ -33,7 +33,8 @@ class Users {
       });
     });
   }
-  login(req, res) {}
+  //Register
+  // login(req, res) {}
   async register(req, res) {
     const data = req.body;
     //encrypt password
@@ -58,6 +59,7 @@ class Users {
       });
     });
   }
+  //login
   login(req, res) {
     const { emailAdd, userPass } = req.body;
     const query = `
