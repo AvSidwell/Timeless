@@ -14,4 +14,10 @@ export default {
     HelloWorld
   }
 }
+//on models 
+//class user {
+// fetchUser(req, res) 
+// `SELECT STATEMENT//`
+// db.quary(quary)
+// }
 </script>
