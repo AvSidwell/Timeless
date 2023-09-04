@@ -15,18 +15,21 @@ const state = {
 };
 
 const mutations = {
+  //PRODUCTS
   setProducts(state, products) {
     state.products = products;
   },
   setProduct(state, product) {
     state.product = product;
   },
+
+  //CART
   setCart(state, cart) {
     state.cart = cart;
   },
   addToCart(state, product) {
     state.cart.push(product);
-  },  
+  },
   removeFromCart(state, prodID) {
     const index = state.cart.findIndex((item) => item.prodID === prodID);
     if (index !== -1) {
@@ -70,7 +73,19 @@ const actions = {
     } catch (error) {
       this.error = "Product not found";
     }
-  },  
+  },
+  ///CART
+  async addToCart({ commit }, product) {
+    try {
+      const response = await axios.post(`${baseUrl}cart`, product);
+      if (response.status === 200) {
+        commit("addToCart", response.data);
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      throw error;
+    }
+  },
   async getCart({ commit }) {
     try {
       const response = await axios.get(`${baseUrl}cart`);
@@ -93,6 +108,7 @@ const actions = {
       commit("addToCart", response.data);
     } catch (error) {
       console.error("Error adding to cart:", error);
+      throw error;
     }
   },
   async fetchCartData({ commit }) {

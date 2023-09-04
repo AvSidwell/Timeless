@@ -30,15 +30,24 @@ export default {
   },
   methods: {
     addToCartProduct() {
-      this.$store.dispatch("addToCart", this.product);
+      // Make sure Axios is properly imported and available
+      this.$store
+        .dispatch('addToCart', this.product) // Dispatch addToCart action
+        .then(() => {
+          // Optionally, you can fetch the updated cart data
+          this.$store.dispatch('getCart');
+        })
+        .catch((error) => {
+          console.error('Error adding to cart:', error);
+        });
     },
   },
   async created() {
     const prodID = this.$route.params.prodID;
     try {
-      await this.$store.dispatch("getProduct", prodID);
+      await this.$store.dispatch('getProduct', prodID);
     } catch (error) {
-      this.error = "Product not found";
+      this.error = 'Product not found';
     }
   },
 };

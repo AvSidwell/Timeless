@@ -21,7 +21,6 @@ export default {
   },
   mounted() {
     this.$store.dispatch("fetchCartData", "removeFromCart");
-    // Remove the mounted hook to simplify the component
   },
 };
 </script>
