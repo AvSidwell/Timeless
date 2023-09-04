@@ -1,7 +1,9 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
-const baseUrl = "https://timeless-kast.onrender.com/";
+// const baseUrl = "https://timeless-kast.onrender.com/";
+
+const baseUrl = " http://localhost:5000/";
 
 const state = {
   products: null,
@@ -81,7 +83,7 @@ const actions = {
   },
   async removeFromCart({ commit }, prodID) {
     try {
-      await axios.delete(`${baseUrl}cart/${prodID}`);
+      await axios.delete(`${baseUrl}cart/${id}`);
       commit("removeFromCart", prodID);
     } catch (error) {
       console.error("Error removing from cart:", error);

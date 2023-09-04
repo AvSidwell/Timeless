@@ -1,11 +1,7 @@
 <template>
   <div>
     <div v-if="products" class="row p-4 justify-content-evenly">
-      <Products
-        v-for="product of products"
-        :key="product.prodID"
-        :product="product"
-      />
+      <Products/>
     </div>
     <div v-else>Processing...</div>
   </div>

@@ -12,7 +12,7 @@
             </div>
           </div>
         </router-link>
-        </div>
+      </div>
     </div>
     <div v-else>Loading...</div>
   </div>
@@ -27,12 +27,9 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getProducts");
-    console.log('Product ID:', product.prodID);
   },
-
 };
 </script>
-
 
 <style scoped>
 .product-card {
