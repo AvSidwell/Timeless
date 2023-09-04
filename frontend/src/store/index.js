@@ -26,7 +26,7 @@ const mutations = {
   },
   addToCart(state, product) {
     state.cart.push(product);
-  },
+  },  
   removeFromCart(state, prodID) {
     const index = state.cart.findIndex((item) => item.prodID === prodID);
     if (index !== -1) {
@@ -55,9 +55,9 @@ const actions = {
       console.error("Error fetching products:", error);
     }
   },
-  async getProduct({ commit , prodID}) {
+  async getProduct({ commit }, prodID) {
     try {
-      const response = await axios.get(`${baseUrl}products/:${prodID}`);
+      const response = await axios.get(`${baseUrl}products/${prodID}`);
       commit("setProduct", response.data);
     } catch (error) {
       console.error("Error fetching product:", error);

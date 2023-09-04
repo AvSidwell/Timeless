@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 
 export default {
   props: {
@@ -40,3 +41,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Add any scoped styles if needed */
+</style>
