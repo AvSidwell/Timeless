@@ -50,7 +50,8 @@ const mutations = {
 };
 
 const actions = {
-  async getProducts({ commit }) {
+  // PRODUCTS
+  async fetchProducts({ commit }) {
     try {
       const response = await axios.get(`${baseUrl}products`);
       commit("setProducts", response.data);
@@ -58,23 +59,17 @@ const actions = {
       console.error("Error fetching products:", error);
     }
   },
-  async getProduct({ commit }, prodID) {
+
+  // CART
+  async fetchCartData({ commit }) {
     try {
-      const response = await axios.get(`${baseUrl}products/${prodID}`);
-      commit("setProduct", response.data);
+      const response = await axios.get(`${baseUrl}cart`);
+      commit("setCart", response.data);
     } catch (error) {
-      console.error("Error fetching product:", error);
+      console.error("Error fetching cart data:", error);
     }
   },
-  async created() {
-    const prodID = this.$route.params.prodID;
-    try {
-      await this.$store.dispatch("getProduct", prodID);
-    } catch (error) {
-      this.error = "Product not found";
-    }
-  },
-  ///CART
+
   async addToCart({ commit }, product) {
     try {
       const response = await axios.post(`${baseUrl}cart`, product);
@@ -86,39 +81,7 @@ const actions = {
       throw error;
     }
   },
-  async getCart({ commit }) {
-    try {
-      const response = await axios.get(`${baseUrl}cart`);
-      commit("setCart", response.data);
-    } catch (error) {
-      console.error("Error fetching cart:", error);
-    }
-  },
-  async postCart({ commit }, cartData) {
-    try {
-      const response = await axios.post(`${baseUrl}cart`, cartData);
-      commit("setCart", response.data);
-    } catch (error) {
-      console.error("Error posting cart:", error);
-    }
-  },
-  async addToCart({ commit }, product) {
-    try {
-      const response = await axios.post(`${baseUrl}cart`, product);
-      commit("addToCart", response.data);
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      throw error;
-    }
-  },
-  async fetchCartData({ commit }) {
-    try {
-      const response = await axios.get(`${baseUrl}cart`);
-      commit("setCart", response.data);
-    } catch (error) {
-      console.error("Error fetching cart data:", error);
-    }
-  },
+
   async removeFromCart({ commit }, prodID) {
     try {
       await axios.delete(`${baseUrl}cart/${prodID}`);
@@ -127,38 +90,7 @@ const actions = {
       console.error("Error removing from cart:", error);
     }
   },
-  ///Product
-  sortProducts({ commit, state }, { field, order }) {
-    let sortedProducts = [...state.products];
-    if (field === "name") {
-      sortedProducts.sort((a, b) => {
-        const nameA = a.prodNAME.toUpperCase();
-        const nameB = b.prodNAME.toUpperCase();
-        if (order === "asc") {
-          return nameA.localeCompare(nameB);
-        } else {
-          return nameB.localeCompare(nameA);
-        }
-      });
-    } else if (field === "price") {
-      sortedProducts.sort((a, b) => {
-        if (order === "asc") {
-          return a.prodPRICE - b.prodPRICE;
-        } else {
-          return b.prodPRICE - a.prodPRICE;
-        }
-      });
-    }
-    commit("setProducts", sortedProducts);
-    commit("setSortBy", { field, order });
-  },
-  ///////////////////////////////////////////////
-  async filterProductsByCategory({ commit }, category) {
-    commit("setSelectedCategory", category);
-  },
-  async searchProducts({ commit }, query) {
-    commit("setSearchQuery", query);
-  },
+
 };
 
 export default createStore({

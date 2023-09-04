@@ -15,12 +15,12 @@
 <script>
 export default {
   computed: {
-    products() {
+    cartItems() {
       return this.$store.state.cart;
     },
   },
   mounted() {
-    this.$store.dispatch("fetchCartData", "removeFromCart");
+    this.$store.dispatch("fetchCartData");
   },
 };
 </script>
