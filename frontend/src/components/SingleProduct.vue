@@ -30,11 +30,9 @@ export default {
   },
   methods: {
     addToCartProduct() {
-      // Make sure Axios is properly imported and available
       this.$store
-        .dispatch('addToCart', this.product) // Dispatch addToCart action
+        .dispatch('addToCart', this.product)
         .then(() => {
-          // Optionally, you can fetch the updated cart data
           this.$store.dispatch('getCart');
         })
         .catch((error) => {
