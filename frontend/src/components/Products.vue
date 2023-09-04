@@ -2,7 +2,7 @@
   <div>
     <div v-if="products" class="row p-4 justify-content-evenly">
       <div v-for="product in products" :key="product.prodID" class="product-card">
-        <router-link :to="{ name: 'Single', params: { productID: product.prodID } }">
+        <router-link :to="{ name: 'Single', params: { prodID: product.prodID } }">
           <div>
             <img :src="product.prodIMG" :alt="product.prodNAME" />
             <div class="product-details">
@@ -27,7 +27,9 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getProducts");
+    console.log('Product ID:', product.prodID);
   },
+
 };
 </script>
 

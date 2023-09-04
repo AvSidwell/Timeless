@@ -33,7 +33,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Cart.vue')
   },
   {
-    path: "/single/:productID",
+    path: "/single/:prodID",
     name: "Single", 
     component: SingleProduct,
   },,

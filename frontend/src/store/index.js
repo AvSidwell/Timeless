@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
-const baseUrl = "http://localhost:5000/";
+const baseUrl = "https://timeless-kast.onrender.com/";
 
 const state = {
   products: null,
