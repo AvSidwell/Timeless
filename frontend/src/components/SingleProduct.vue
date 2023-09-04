@@ -18,7 +18,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      error: null, 
+      error: null,
     };
   },
   computed: {
@@ -30,35 +30,20 @@ export default {
     },
     ...mapActions(["addToCart"]),
   },
-  async created() {
+  created() {
     const prodID = this.$route.params.prodID;
+    console.log("Product ID:", prodID); // Log prodID to check if it's correct
     try {
-      await this.$store.dispatch("getProduct", prodID);
+      this.$store.dispatch("getProduct", prodID).then(() => {
+        console.log("Product:", this.product); // Log the product data
+      });
     } catch (error) {
-      this.error = "Product not found"; // Set an error message
+      this.error = "Product not found";
     }
   },
 };
 </script>
 
-<!-- <script>
-import { mapGetters } from "vuex";
-
-export default {
-  computed: {
-    ...mapGetters(["product"]),
-  },
-  methods: {
-    addToCartProduct() {
-      this.$store.dispatch("addToCart", this.product);
-    },
-  },
-  created() {
-    const prodID = this.$route.params.prodID;
-    this.$store.dispatch("getProduct", prodID);
-  },
-};
-</script> -->
 
 <style scoped>
 .single-product {

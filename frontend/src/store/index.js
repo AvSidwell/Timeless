@@ -55,14 +55,22 @@ const actions = {
       console.error("Error fetching products:", error);
     }
   },
-  async getProduct({ commit }, prodID) {
+  async getProduct({ commit , prodID}) {
     try {
-      const response = await axios.get(`${baseUrl}products/${prodID}`);
+      const response = await axios.get(`${baseUrl}products/:${prodID}`);
       commit("setProduct", response.data);
     } catch (error) {
       console.error("Error fetching product:", error);
     }
   },
+  async created() {
+    const prodID = this.$route.params.prodID;
+    try {
+      await this.$store.dispatch("getProduct", prodID);
+    } catch (error) {
+      this.error = "Product not found";
+    }
+  },  
   async getCart({ commit }) {
     try {
       const response = await axios.get(`${baseUrl}cart`);

@@ -1,12 +1,20 @@
 <template>
   <div>
     <div>
-      <button class="btn btn-primary mx-2" @click="sortByName('asc')">Sort by Name (Asc)</button>
-      <button class="btn btn-primary mx-2" @click="sortByName('desc')">Sort by Name (Desc)</button>
-      <button class="btn btn-primary mx-2" @click="sortByPrice('asc')">Sort by Price (Asc)</button>
-      <button class="btn btn-primary mx-2" @click="sortByPrice('desc')">Sort by Price (Desc)</button>
+      <button class="btn btn-primary mx-2" @click="sortByName('asc')">
+        Sort by Name (Asc)
+      </button>
+      <button class="btn btn-primary mx-2" @click="sortByName('desc')">
+        Sort by Name (Desc)
+      </button>
+      <button class="btn btn-primary mx-2" @click="sortByPrice('asc')">
+        Sort by Price (Asc)
+      </button>
+      <button class="btn btn-primary mx-2" @click="sortByPrice('desc')">
+        Sort by Price (Desc)
+      </button>
     </div>
-    
+
     <div>
       <label for="category">Filter by Category:</label>
       <select
@@ -35,7 +43,7 @@
         class="product-card"
       >
         <router-link
-          :to="{ name: 'Single', params: { prodID: product.prodID } }"
+        :to="{ name: 'Single', params: { prodID: product.prodID } }"
         >
           <div>
             <img :src="product.prodIMG" :alt="product.prodNAME" />
@@ -115,8 +123,10 @@ export default {
       this.$store.dispatch("sortProducts", { field: "price", order });
     },
     filterByCategory() {
+      this.$store.dispatch("filterProductsByCategory", this.selectedCategory);
     },
     searchByName() {
+      this.$store.dispatch("searchProducts", this.searchQuery);
     },
   },
   mounted() {
