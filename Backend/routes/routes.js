@@ -47,16 +47,16 @@ const {
 router.get("/products", showProducts);
 
 // Get Single Product
-router.get("/products/:id", showProductById);
+router.get("/products/:prodID", showProductById);
 
 // Create New Product
 router.post("/products", createProduct);
 
 // Update Product
-router.put("/products/:id", updateProduct);
+router.put("/products/:prodID", updateProduct);
 
 // Delete Product
-router.delete("/products/:id", deleteProduct);
+router.delete("/products/:prodID", deleteProduct);
 
 const {
   showCart,
