@@ -7,28 +7,58 @@
         <p>Price: R {{ product.prodPRICE }}.00</p>
         <p>Category: {{ product.prodCAT }}</p>
       </div>
-      <button @click="addToCart(product)" class="btn btn-primary">Add to Cart</button>
+      <button @click="addToCartProduct" class="btn btn-primary">Add to Cart</button>
     </div>
     <div v-else>Loading...</div>
   </div>
 </template>
-
 <script>
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      error: null, 
+    };
+  },
   computed: {
-    ...mapGetters(["getProductById"]),
+    ...mapGetters(["product"]),
   },
   methods: {
+    addToCartProduct() {
+      this.addToCart(this.product);
+    },
     ...mapActions(["addToCart"]),
   },
-  created() {
+  async created() {
     const prodID = this.$route.params.prodID;
-    this.getProductById(prodID);
+    try {
+      await this.$store.dispatch("getProduct", prodID);
+    } catch (error) {
+      this.error = "Product not found"; // Set an error message
+    }
   },
 };
 </script>
+
+<!-- <script>
+import { mapGetters } from "vuex";
+
+export default {
+  computed: {
+    ...mapGetters(["product"]),
+  },
+  methods: {
+    addToCartProduct() {
+      this.$store.dispatch("addToCart", this.product);
+    },
+  },
+  created() {
+    const prodID = this.$route.params.prodID;
+    this.$store.dispatch("getProduct", prodID);
+  },
+};
+</script> -->
 
 <style scoped>
 .single-product {

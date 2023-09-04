@@ -9,6 +9,9 @@ const state = {
   products: null,
   product: null,
   cart: [],
+  selectedCategory: "",
+  searchQuery: "",
+  sortBy: "",
 };
 
 const mutations = {
@@ -30,6 +33,17 @@ const mutations = {
       state.cart.splice(index, 1);
     }
   },
+
+  ///Products Page Functionality
+  setSelectedCategory: (state, category) => {
+    state.selectedCategory = category;
+  },
+  setSearchQuery: (state, query) => {
+    state.searchQuery = query;
+  },
+  setSortBy: (state, sortBy) => {
+    state.sortBy = sortBy;
+  },
 };
 
 const actions = {
@@ -43,7 +57,7 @@ const actions = {
   },
   async getProduct({ commit }, prodID) {
     try {
-      const response = await axios.get(`${baseUrl}product/${prodID}`);
+      const response = await axios.get(`${baseUrl}products/${prodID}`);
       commit("setProduct", response.data);
     } catch (error) {
       console.error("Error fetching product:", error);
@@ -83,11 +97,43 @@ const actions = {
   },
   async removeFromCart({ commit }, prodID) {
     try {
-      await axios.delete(`${baseUrl}cart/${id}`);
+      await axios.delete(`${baseUrl}cart/${prodID}`);
       commit("removeFromCart", prodID);
     } catch (error) {
       console.error("Error removing from cart:", error);
     }
+  },
+  ///Product
+  sortProducts({ commit, state }, { field, order }) {
+    let sortedProducts = [...state.products];
+    if (field === "name") {
+      sortedProducts.sort((a, b) => {
+        const nameA = a.prodNAME.toUpperCase();
+        const nameB = b.prodNAME.toUpperCase();
+        if (order === "asc") {
+          return nameA.localeCompare(nameB);
+        } else {
+          return nameB.localeCompare(nameA);
+        }
+      });
+    } else if (field === "price") {
+      sortedProducts.sort((a, b) => {
+        if (order === "asc") {
+          return a.prodPRICE - b.prodPRICE;
+        } else {
+          return b.prodPRICE - a.prodPRICE;
+        }
+      });
+    }
+    commit("setProducts", sortedProducts);
+    commit("setSortBy", { field, order });
+  },
+  ///////////////////////////////////////////////
+  async filterProductsByCategory({ commit }, category) {
+    commit("setSelectedCategory", category);
+  },
+  async searchProducts({ commit }, query) {
+    commit("setSearchQuery", query);
   },
 };
 
