@@ -199,47 +199,45 @@ const actions = {
 
   //User
   //register
-    async registerUser({ commit, dispatch }, userData) {
-      try {
-        const response = await axios.post(`${baseUrl}register`, userData);
-        commit("setUser", userData);
-  
-        Swal.fire({
-          icon: 'success',
-          title: 'Registration Successful',
-          text: 'You have successfully registered.',
-        });
-  
-      } catch (error) {
-        dispatch("showErrorMessage", "Registration failed");
-      }
-    },
-  //Login
-    async loginUser({ commit, dispatch }, credentials) {
-      try {
-        const response = await axios.post(`${baseUrl}login`, credentials);
-        const { token, user } = response.data;
-        commit("setToken", token);
-        commit("setUser", user);
-  
-        Swal.fire({
-          icon: 'success',
-          title: 'Login Successful',
-          text: 'You have successfully logged in.',
-        });
-  
-      } catch (error) {
-        dispatch("showErrorMessage", "Login failed");
-      }
-    },
-  //Handle Err
-    showErrorMessage(_, message) {
+  async registerUser({ commit, dispatch }, userData) {
+    try {
+      const response = await axios.post(`${baseUrl}register`, userData);
+      commit("setUser", userData);
+
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: message,
+        icon: "success",
+        title: "Registration Successful",
+        text: "You have successfully registered.",
       });
-    },
+    } catch (error) {
+      dispatch("showErrorMessage", "Registration failed");
+    }
+  },
+  //Login
+  async loginUser({ commit, dispatch }, credentials) {
+    try {
+      const response = await axios.post(`${baseUrl}login`, credentials);
+      const { token, user } = response.data;
+      commit("setToken", token);
+      commit("setUser", user);
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "You have successfully logged in.",
+      });
+    } catch (error) {
+      dispatch("showErrorMessage", "Login failed");
+    }
+  },
+  //Handle Err
+  showErrorMessage(_, message) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: message,
+    });
+  },
 };
 
 export default createStore({
