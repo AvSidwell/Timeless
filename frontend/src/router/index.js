@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import SingleProduct from '@/components/SingleProduct.vue';
+import SingleProduct from "@/components/SingleProduct.vue";
+import Register from "../views/Register.vue"; 
+import Login from "../views/Login.vue";
+import store from "../store";
 
 const routes = [
   {
@@ -40,6 +43,20 @@ const routes = [
     name: "Single",
     component: SingleProduct,
   },
+  { path: "/register", name: "register", component: Register },
+  { path: "/Login", name: "register", component: Login },
+  // { path: "/login", name: "login", component: Login },
+  // {
+  //   path: "/login",
+  //   component: Login,
+  //   beforeEnter: (to, from, next) => {
+  //     if (store.state.isLoggedIn) {
+  //       next();
+  //     } else {
+  //       next({ name: "login" });
+  //     }
+  //   },
+  // },
 ];
 
 const router = createRouter({

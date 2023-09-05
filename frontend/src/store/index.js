@@ -1,17 +1,30 @@
 import { createStore } from "vuex";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { cookies } from "vue3-cookies";
+import routes from "../router/index";
 
 // const baseUrl = "https://timeless-kast.onrender.com/";
 
 const baseUrl = " http://localhost:5000/";
 
 const state = {
+  //Products/Shop
   products: null,
   product: null,
-  cart: [],
   selectedCategory: "",
   searchQuery: "",
+  //Cart
+  cart: [],
   sortBy: "",
+  //User
+  user: null,
+  token: null,
+  isLoggedIn: false,
+
+  //Err handling and Success
+  errMsg: null,
+  succMsg: null,
 };
 
 const mutations = {
@@ -21,6 +34,16 @@ const mutations = {
   },
   setProduct(state, product) {
     state.product = product;
+  },
+  ///Products Page Functionality
+  setSelectedCategory: (state, category) => {
+    state.selectedCategory = category;
+  },
+  setSearchQuery: (state, query) => {
+    state.searchQuery = query;
+  },
+  setSortBy: (state, sortBy) => {
+    state.sortBy = sortBy;
   },
 
   //CART
@@ -37,15 +60,29 @@ const mutations = {
     }
   },
 
-  ///Products Page Functionality
-  setSelectedCategory: (state, category) => {
-    state.selectedCategory = category;
+  //User
+  setUser(state, user) {
+    state.user = user;
+    state.isLoggedIn = true;
   },
-  setSearchQuery: (state, query) => {
-    state.searchQuery = query;
+  setToken(state, token) {
+    state.token = token;
   },
-  setSortBy: (state, sortBy) => {
-    state.sortBy = sortBy;
+  clearUser(state) {
+    state.user = null;
+    state.token = null;
+    state.isLoggedIn = false;
+  },
+  //Err handling and Success
+  setErrMsg(state, message) {
+    state.errMsg = message;
+  },
+  setSuccMsg(state, message) {
+    state.succMsg = message;
+  },
+  clearMessages(state) {
+    state.errMsg = null;
+    state.succMsg = null;
   },
 };
 
@@ -159,6 +196,50 @@ const actions = {
   async searchProducts({ commit }, query) {
     commit("setSearchQuery", query);
   },
+
+  //User
+  //register
+    async registerUser({ commit, dispatch }, userData) {
+      try {
+        const response = await axios.post(`${baseUrl}register`, userData);
+        commit("setUser", userData);
+  
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration Successful',
+          text: 'You have successfully registered.',
+        });
+  
+      } catch (error) {
+        dispatch("showErrorMessage", "Registration failed");
+      }
+    },
+  //Login
+    async loginUser({ commit, dispatch }, credentials) {
+      try {
+        const response = await axios.post(`${baseUrl}login`, credentials);
+        const { token, user } = response.data;
+        commit("setToken", token);
+        commit("setUser", user);
+  
+        Swal.fire({
+          icon: 'success',
+          title: 'Login Successful',
+          text: 'You have successfully logged in.',
+        });
+  
+      } catch (error) {
+        dispatch("showErrorMessage", "Login failed");
+      }
+    },
+  //Handle Err
+    showErrorMessage(_, message) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+      });
+    },
 };
 
 export default createStore({
@@ -172,22 +253,22 @@ export default createStore({
 
 // context.set('setUser', {result, msg})
 // cookies.set.('realUser', {token, msg, })
-// use the cookies, get and 
+// use the cookies, get and
 // router.push({name:'home'})
 // import router from '@/router'
 // to esister there is no need for res only msg
 // alert that dispatch fetch/getUser function
 // router.push({name: 'login'})
-// or after the registration you can login 
+// or after the registration you can login
 // for token
 // function applyToken(token) {
 // if (token)
-// axios.derault 
+// axios.derault
 // }
 // change the login text for login to Logout when user has successfully loggedin
 // remove cookie to logout make sure it resets to the log/registration page
-// set default img on userurl 
-// make sure login page goes in first  in the router make a beforeEnter(): if(!)  function to make sure 
+// set default img on userurl
+// make sure login page goes in first  in the router make a beforeEnter(): if(!)  function to make sure
 // once someone goes in to the home page and they do not have cookies re-route them to the login page
 // make use vue3-cookies sweetalert
 // make use of Vue LifeCycle Hooks to make login page log faster
