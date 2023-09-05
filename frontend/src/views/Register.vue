@@ -23,6 +23,23 @@
         />
       </div>
       <div class="form-group">
+        <label for="gender">Gender:</label>
+        <input type="text" id="gender" v-model="form.gender" class="input" />
+      </div>
+      <div class="form-group">
+        <label for="userDOB">Date of Birth:</label>
+        <input type="date" id="userDOB" v-model="form.userDOB" class="input" />
+      </div>
+      <div class="form-group">
+        <label for="userRole">User Role:</label>
+        <input
+          type="text"
+          id="userRole"
+          v-model="form.userRole"
+          class="input"
+        />
+      </div>
+      <div class="form-group">
         <label for="emailAdd">Email:</label>
         <input
           type="email"
@@ -42,6 +59,15 @@
           class="input"
         />
       </div>
+      <div class="form-group">
+        <label for="profileUrl">Profile URL:</label>
+        <input
+          type="text"
+          id="profileUrl"
+          v-model="form.profileUrl"
+          class="input"
+        />
+      </div>
       <button type="submit">Register</button>
     </form>
     <p v-if="registrationError" class="error">{{ registrationError }}</p>
@@ -55,8 +81,12 @@ export default {
       form: {
         firstName: "",
         lastName: "",
+        gender: "",
+        userDOB: "",
+        userRole: "",
         emailAdd: "",
         userPass: "",
+        profileUrl: "",
       },
       registrationError: null,
     };
@@ -66,13 +96,7 @@ export default {
       this.registrationError = null;
 
       try {
-        // Sending user registration data to your server
-        const response = await axios.post(
-          "YOUR_SERVER_ENDPOINT_HERE",
-          this.form
-        );
-
-        // Handle success, you can show a success message or navigate to another page
+        const response = await this.$store.dispatch("registerUser", this.form);
         this.$router.push("/login");
       } catch (error) {
         this.registrationError =
