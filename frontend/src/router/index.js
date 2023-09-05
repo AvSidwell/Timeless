@@ -43,8 +43,8 @@ const routes = [
     name: "Single",
     component: SingleProduct,
   },
-  { path: "/register", name: "register", component: Register },
-  { path: "/Login", name: "register", component: Login },
+  { path: "/Register", name: "register", component: Register },
+  { path: "/Login", name: "login", component: Login },
   // { path: "/login", name: "login", component: Login },
   // {
   //   path: "/login",

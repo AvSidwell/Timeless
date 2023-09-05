@@ -202,17 +202,20 @@ const actions = {
   async registerUser({ commit, dispatch }, userData) {
     try {
       const response = await axios.post(`${baseUrl}register`, userData);
-      commit("setUser", userData);
-
+      const user = response.data; 
+      commit("setUser", user);
+  
       Swal.fire({
         icon: "success",
         title: "Registration Successful",
         text: "You have successfully registered.",
       });
+      this.$router.push("/login");
     } catch (error) {
       dispatch("showErrorMessage", "Registration failed");
     }
   },
+  
   //Login
   async loginUser({ commit, dispatch }, credentials) {
     try {
