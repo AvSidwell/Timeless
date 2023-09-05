@@ -10,7 +10,7 @@ require('dotenv').config();
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
     multipleStatements: true,
-    connectionLimit: 30 
+    connectionLimit: 3000
 });
   
 module.exports = db;
