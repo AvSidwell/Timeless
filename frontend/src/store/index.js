@@ -166,3 +166,34 @@ export default createStore({
   mutations,
   actions,
 });
+// fetchUsers (context)
+// ocontext.commit("setUsers", result, results)
+// }catch(err)
+
+// context.set('setUser', {result, msg})
+// cookies.set.('realUser', {token, msg, })
+// use the cookies, get and 
+// router.push({name:'home'})
+// import router from '@/router'
+// to esister there is no need for res only msg
+// alert that dispatch fetch/getUser function
+// router.push({name: 'login'})
+// or after the registration you can login 
+// for token
+// function applyToken(token) {
+// if (token)
+// axios.derault 
+// }
+// change the login text for login to Logout when user has successfully loggedin
+// remove cookie to logout make sure it resets to the log/registration page
+// set default img on userurl 
+// make sure login page goes in first  in the router make a beforeEnter(): if(!)  function to make sure 
+// once someone goes in to the home page and they do not have cookies re-route them to the login page
+// make use vue3-cookies sweetalert
+// make use of Vue LifeCycle Hooks to make login page log faster
+// on navbar  import {cookies} from useCookies
+// computed() { return this.$store.dispatch.state.user || cookies.get('getUser') }
+// grab data from cookies to make sure users stay logedin after refreshing the page
+// make use of v-show to limit the pages/router-Links/views shown in navbar
+// adminCheck() {
+// }
