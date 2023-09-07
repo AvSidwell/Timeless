@@ -1,19 +1,68 @@
 <template>
   <div>
-    <nav class="navbar header">
+    <nav class="navbar header p-auto">
       <router-link to="/" class="nav-item">Home</router-link>
       <router-link to="/ProductsView" class="nav-item">Shop</router-link>
-      <router-link to="/" class="nav-item">Admin</router-link>
+      <router-link to="/Admin" v-show="showAdminLink" class="nav-item"
+        >Admin</router-link
+      >
       <router-link to="/about" class="nav-item">About</router-link>
       <router-link to="/" class="nav-item">Contact</router-link>
       <router-link to="/Cart" class="nav-item">Cart</router-link>
-      <router-link to="/login">Login</router-link>
+      <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
+      <button v-else @click="logout">Logout</button>
       <router-link to="/register">Register</router-link>
     </nav>
+    <br>
+    <div v-if="isLoggedIn">
+      <p>Welcome back {{ userFirstName }} {{ userLastName }}</p>
+    </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  computed: {
+    showAdminLink() {
+      // Check if the user is logged in and is an admin
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      return (
+        this.$store.state.isLoggedIn &&
+        this.$store.state.user &&
+        this.$store.state.user.isAdmin
+      );
+    },
+    isLoggedIn() {
+      // Check if the user is logged in
+      const userDataJSON = localStorage.getItem("userData");
+      return !!userDataJSON; 
+    },
+    userFirstName() {
+      // Get the user's first name from localStorage
+      const userDataJSON = localStorage.getItem("userData");
+      if (userDataJSON) {
+        const userData = JSON.parse(userDataJSON);
+        return userData.result.firstName || ""; // Replace 'firstName' with the actual field name
+      }
+      return "";
+    },
+    userLastName() {
+      const userDataJSON = localStorage.getItem("userData");
+      if (userDataJSON) {
+        const userData = JSON.parse(userDataJSON);
+        return userData.result.lastName || ""; 
+      }
+      return "";
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+      localStorage.removeItem("userData");
+      this.$router.push("/login");
+      window.location.reload();
+    },
+  },
+};
 </script>
 <!-- <style>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");

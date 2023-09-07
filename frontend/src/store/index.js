@@ -2,15 +2,15 @@ import { createStore } from "vuex";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cookies } from "vue3-cookies";
-import routes from "../router/index";
+// import routes from "../router/index";
 
 // const baseUrl = "https://timeless-kast.onrender.com/";
 
-const baseUrl = " http://localhost:5000/";
+const baseUrl = "http://localhost:5000/";
 
 const state = {
   //Products/Shop
-  products: null,
+  products: [],
   product: null,
   selectedCategory: "",
   searchQuery: "",
@@ -25,6 +25,10 @@ const state = {
   //Err handling and Success
   errMsg: null,
   succMsg: null,
+
+  //Admin CRUD
+  updatedProduct: null,
+  deletedProduct: null,
 };
 
 const mutations = {
@@ -73,6 +77,7 @@ const mutations = {
     state.token = null;
     state.isLoggedIn = false;
   },
+
   //Err handling and Success
   setErrMsg(state, message) {
     state.errMsg = message;
@@ -83,6 +88,33 @@ const mutations = {
   clearMessages(state) {
     state.errMsg = null;
     state.succMsg = null;
+  },
+  setUserFromLocalStorage(state) {
+    const token = localStorage.getItem("userToken");
+    if (token) {
+      state.token = token;
+      state.isLoggedIn = true;
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      if (userData) {
+        state.user = userData;
+      }
+    }
+  },
+
+  //Admin CRUD
+  setupdateProduct(state, updatedProduct) {
+    const index = state.products.findIndex(
+      (product) => product.prodID === updatedProduct.prodID
+    );
+    if (index !== -1) {
+      state.products.splice(index, 1, updatedProduct);
+    }
+  },
+  // setUpdatedProduct(state, product) {
+  //   state.updatedProduct = product;
+  // },
+  setDeletedProduct(state, product) {
+    state.deletedProduct = product;
   },
 };
 
@@ -199,47 +231,329 @@ const actions = {
 
   //User
   //register
-  async registerUser({ commit, dispatch }, userData) {
+  async registerUser({ commit }, userData) {
     try {
       const response = await axios.post(`${baseUrl}register`, userData);
-      const user = response.data; 
-      commit("setUser", user);
-  
-      Swal.fire({
-        icon: "success",
-        title: "Registration Successful",
-        text: "You have successfully registered.",
-      });
-      this.$router.push("/login");
-    } catch (error) {
-      dispatch("showErrorMessage", "Registration failed");
-    }
-  },
-  
-  //Login
-  async loginUser({ commit, dispatch }, credentials) {
-    try {
-      const response = await axios.post(`${baseUrl}login`, credentials);
-      const { token, user } = response.data;
-      commit("setToken", token);
+      const user = response.data;
       commit("setUser", user);
 
-      Swal.fire({
-        icon: "success",
-        title: "Login Successful",
-        text: "You have successfully logged in.",
-      });
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful",
+          text: "You have successfully registered.",
+        });
+
+        this.$router.push("/login");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: "An error occurred during registration.",
+        });
+      }
     } catch (error) {
-      dispatch("showErrorMessage", "Login failed");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+      });
     }
   },
+  //Login
+  async loginUser({ commit }, credentials) {
+    try {
+      const response = await axios.post(`${baseUrl}login`, credentials);
+  
+      if (response.status === 200) {
+        const { token, user } = response.data;
+        console.log(response.data);
+        console.log(token);
+  
+        commit("setToken", token);
+        commit("setUser", user);
+  
+        // Store user data in local storage
+        localStorage.setItem("userToken", token);
+        localStorage.setItem("userData", JSON.stringify(response.data));
+        window.location.reload();
+  
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "You have successfully logged in.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "An error occurred during login.",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+      });
+    }
+  },
+  
+  
+  // async loginUser({ commit }, credentials) {
+  //   try {
+  //     const response = await axios.post(`${baseUrl}login`, credentials);
+  //     // if (response.status === 200) {
+  //     // const { token, user } = response.data;
+  //     // commit("setToken", token);
+  //     // commit("setUser", user);
+  //     // const response = await axios.post(`${baseUrl}login`, credentials);
+  //     // if (response.status === 200) {
+  //     const { token, user  } = response.data;
+  //     console.log(response.data);
+  //     console.log(token);
+  //     commit("setToken", token);
+  //     commit("setUser", user);
+  //     localStorage.setItem("userToken", token);
+  //     localStorage.setItem("userData", JSON.stringify(this.credentials));
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Login Successful",
+  //       text: "You have successfully logged in.",
+  //     });
+  //     // } else {
+  //     //   Swal.fire({
+  //     //     icon: "error",
+  //     //     title: "Error",
+  //     //     text: "An error occurred during login.",
+  //     //   });
+  //     // }
+  //   } catch (error) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: error.message,
+  //     });
+  //   }
+  // },
+
+  logout({ commit }) {
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userData");
+    commit("clearUser");
+    window.location.reload();
+  },
+
+  // async registerUser({ commit }, userData) {
+  //   try {
+  //     const response = await axios.post(`${baseUrl}register`, userData);
+  //     const user = response.data;
+  //     commit("setUser", user);
+
+  //     if (response.status === 200) {
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Registration Successful",
+  //         text: "You have successfully registered.",
+  //       });
+  //       // Consider navigation in your component instead of here.
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Registration Failed",
+  //         text: "An error occurred during registration.",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: error.message,
+  //     });
+  //   }
+  // },
+
+  // async loginUser({ commit }, credentials) {
+  //   try {
+  //     const response = await axios.post(`${baseUrl}login`, credentials);
+  //     if (response.status === 200) {
+  //       const { token, user } = response.data;
+  //       commit("setToken", token);
+  //       commit("setUser", user);
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Login Successful",
+  //         text: "You have successfully logged in.",
+  //       });
+  //       // Consider navigation in your component instead of here.
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Error",
+  //         text: "An error occurred during login.",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: error.message,
+  //     });
+  //   }
+  // }
+
   //Handle Err
-  showErrorMessage(_, message) {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: message,
-    });
+  // showErrorMessage(_, message) {
+  //   Swal.fire({
+  //     icon: "error",
+  //     title: "Error",
+  //     text: message,
+  //   });
+  // },
+
+  // Admin CRUD
+  async editProduct() {
+    try {
+      const editedProduct = {
+        prodPRICE: this.updatedProduct.prodPRICE,
+        prodNAME: this.updatedProduct.prodNAME,
+        prodDESC: this.updatedProduct.prodDESC,
+        prodCAT: this.updatedProduct.prodCAT,
+        prodTYPE: this.updatedProduct.prodTYPE,
+        prodSEASON: this.updatedProduct.prodSEASON,
+        prodIMG: this.updatedProduct.prodIMG,
+        prodQUANTITY: this.updatedProduct.prodQUANTITY,
+      };
+
+      const response = await axios.patch(
+        `${baseUrl}products/${this.updatedProduct.prodID}`,
+        editedProduct
+      );
+
+      if (response.status === 200) {
+        this.$store.dispatch("updateProduct", {
+          prodID: this.updatedProduct.prodID,
+          editedProduct: response.data,
+        });
+
+        Swal.fire({
+          icon: "success",
+          title: "Product Updated",
+          text: "The product has been updated successfully.",
+        });
+
+        this.resetForm();
+        $("#exampleModal").modal("hide");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "An error occurred while updating the product.",
+        });
+      }
+    } catch (error) {
+      console.error("Error editing product:", error);
+    }
+  },
+
+  async updateProduct({ commit }, { prodID, editedProduct }) {
+    try {
+      const response = await axios.patch(
+        `${baseUrl}products/${prodID}`,
+        editedProduct
+      );
+
+      if (response.status === 200) {
+        commit("updateProductInState", response.data);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "An error occurred while updating the product.",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+      });
+    }
+  },
+
+  // async updateProduct({ commit }, { prodID, updatedProduct }) {
+  //   try {
+  //     const response = await axios.patch(`${baseUrl}products/${prodID}`, updatedProduct);
+  //     if (response.status === 200) {
+
+  //       commit("setupdateProduct", response.data);
+
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Product Updated",
+  //         text: "The product has been updated successfully.",
+  //       });
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Update Failed",
+  //         text: "An error occurred while updating the product.",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: error.message,
+  //     });
+  //   }
+  // },
+  async deleteProduct({ commit }, prodID) {
+    try {
+      const response = await axios.delete(`${baseUrl}products/${prodID}`);
+      if (response.status === 200) {
+        commit("setDeletedProduct", response.data);
+
+        Swal.fire({
+          icon: "success",
+          title: "Product Deleted",
+          text: "The product has been deleted successfully.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Delete Failed",
+          text: "An error occurred while deleting the product.",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+      });
+    }
+  },
+  async fetchProductForEdit({ commit }, prodID) {
+    try {
+      const response = await axios.get(`${baseUrl}products/${prodID}`);
+      const product = response.data;
+      commit("setProductForEdit", product);
+    } catch (error) {
+      console.error("Error fetching product for edit:", error);
+    }
+  },
+  async updateProduct({ commit }, { prodID, editedProduct }) {
+    try {
+      const response = await axios.patch(
+        `${baseUrl}products/${prodID}`,
+        editedProduct
+      );
+
+      commit("updateProductInState", response.data);
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
   },
 };
 

@@ -11,13 +11,15 @@
         Add to Cart
       </button>
     </div>
-    <div v-else>Loading...</div>
+    <div v-else> <Spinner/> </div>
     <cart :cart-items="cart"> </cart>
   </div>
 </template>
 
 <script>
+import Spinner from "./Spinner.vue";
 export default {
+  component: {Spinner},
   data() {
     return {
       error: null,
