@@ -47,16 +47,17 @@ export default {
           response.data
         ) {
           const token = response.token;
-          this.$cookies.set("userToken", token);
+          // this.$cookies.set("userToken", token);
           const userData = response.data;
           localStorage.setItem("userData", JSON.stringify(userData));
+          this.$router.push("/");
         } else {
           this.$router.push("/");
           console.log(response);
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          this.loginError = "Successfully Logged In";
+          this.loginError = "Log Err";
         } else {
           console.log(error);
         }

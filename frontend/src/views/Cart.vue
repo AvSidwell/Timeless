@@ -1,26 +1,30 @@
 <template>
   <div>
-    <div v-if="cartItems" class="row p-4 justify-content-evenly">
-      <CartItem
-        v-for="cartItem in cartItems"
-        :key="cartItem.prodID"
-        :product="cartItem"
-        @removeFromCart="removeFromCart(cartItem.prodID)"
-      />
+    <div v-if="cart" class="row p-4 justify-content-evenly">
+      <cart />
     </div>
     <div v-else>Cart is empty.</div>
   </div>
 </template>
 
 <script>
+import cart from "@/components/Cart.vue";
 export default {
   computed: {
-    cartItems() {
+    allCart() {
       return this.$store.state.cart;
     },
+    cart() {
+      return this.allCart || [];
+    },
   },
+
+  // mounted() {
+  //   this.$store.dispatch("getCart");
+  // },
   mounted() {
-    this.$store.dispatch("fetchCartData");
+    this.$store.dispatch("getCart");
   },
+  components: { cart },
 };
 </script>

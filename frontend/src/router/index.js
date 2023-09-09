@@ -5,6 +5,7 @@ import Register from "../views/Register.vue";
 import Login from "../views/Login.vue";
 import store from "../store";
 import ProductEditModal from "../components/ProductEditModal.vue";
+import ProductAdd from "../components/ProductAdd.vue";
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: "/products/:prodID/edit",
     name: "product-edit",
     component: ProductEditModal,
+  },
+  {
+    path: "/ProductAdd",
+    name: "ProductAdd",
+    component: ProductAdd,
   },
 ];
 

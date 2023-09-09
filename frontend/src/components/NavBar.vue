@@ -3,7 +3,7 @@
     <nav class="navbar header p-auto">
       <router-link to="/" class="nav-item">Home</router-link>
       <router-link to="/ProductsView" class="nav-item">Shop</router-link>
-      <router-link to="/Admin" v-show="showAdminLink" class="nav-item"
+      <router-link to="/Admin"  class="nav-item"
         >Admin</router-link
       >
       <router-link to="/about" class="nav-item">About</router-link>
