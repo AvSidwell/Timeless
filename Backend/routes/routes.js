@@ -75,7 +75,7 @@ router.get("/cart/:id", showCartById);
 router.post("/cart", createCart);
 
 // Update Cart
-router.put("/cart/:id", updateCart);
+router.patch("/cart/:id", updateCart);
 
 // Delete Cart
 router.delete("/cart/:id", deleteCart);
