@@ -7,7 +7,7 @@ function createToken(user) {
     },
     process.env.SECRET_KEY,
     {
-        expiresIn: '2h'
+        expiresIn: '5h'
     })
 }
 module.exports = {
