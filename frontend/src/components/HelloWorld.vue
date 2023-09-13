@@ -2,9 +2,9 @@
   <div class="home">
     <section class="hero">
       <div class="hero-content">
-        <h1>Welcome to Timeless Suits</h1>
+        <h1>Welcome to Timeless</h1>
         <p>Discover the Perfect Suit for Every Occasion</p>
-        <button @click="exploreSuits">Explore Suits</button>
+        <router-link to="/ProductsView" class="nav-item">Shop</router-link>
       </div>
     </section>
 
@@ -23,7 +23,7 @@
         Explore our wide range of suits for men and women, and find the perfect
         outfit that suits your style.
       </p>
-      <button @click="learnMore">Learn More</button>
+      <router-link to="/about" class="nav-item">About</router-link>
     </section>
 
     <footer>
@@ -40,19 +40,37 @@ export default {
 </script>
 
 <style scoped>
+* {
+  font-family: "Keania One", cursive;
+}
+h1 {
+  color:#e9e9e9;
+  box-shadow: 1.5px 2px 5px #2b2828;
+}
+.nav-item {
+  border-radius: 0.4rem;
+  padding: 5px;
+  color: #e9e9e9;
+  background-color: #2b2828;
+  border: solid #e9e9e9;
+  box-shadow: 1.5px 2px 5px #2b2828;
+}
+
 .home {
   font-family: Arial, sans-serif;
 }
 
-header {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 0;
-  text-align: center;
-}
+
 .hero {
-  /* background-image: url("""); */
+  background-image:  linear-gradient(rgba(0, 0, 0, 0.65), rgba(10, 0, 0, 0.65)), url("https://i.postimg.cc/c4FXDB8D/2690453.jpg");
+  /* background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)); */
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-size: cover;
+  height: 100vh;
+  background-repeat: no-repeat;
   background-position: center;
   color: white;
   text-align: center;
@@ -60,8 +78,8 @@ header {
 }
 
 .hero-content {
-  max-width: 800px;
-  margin: 0 auto;
+  color: #e9e9e9;
+  text-shadow: 2px 4px 3px #2b2828;
 }
 
 h1 {

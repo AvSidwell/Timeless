@@ -138,6 +138,15 @@ const mutations = {
 };
 
 const actions = {
+  async getUser({ commit }) {
+    try {
+      const response = await axios.get(`${baseUrl}user`);
+      commit("setUser", response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  },
   async getProducts({ commit }) {
     try {
       const response = await axios.get(`${baseUrl}products`);
@@ -355,10 +364,14 @@ const actions = {
   //     console.error("Error removing from cart:", error);
   //   }
   // },
-  async getCart({ commit }) {
+  async getCart({ commit }, userID) {
     try {
-      const response = await axios.get(`${baseUrl}cart`);
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      const response = await axios.get(`${baseUrl}cart/${userData.result.userID}`
+      );
       commit("setCart", response.data);
+      console.log(userData.result.userID);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching cart:", error);
     }
@@ -376,12 +389,13 @@ const actions = {
       if (response.status === 200) {
         commit("addToCart", response.data);
         console.log("addToCart", response.data);
-        await this.dispatch("getCart");
+        await dispatch("getCart");
         Swal.fire({
           icon: "success",
           title: "Added to Cart",
           text: "The product has been added to your cart.",
         });
+        dispatch("getCart");
 
         return true;
       } else {
@@ -430,7 +444,10 @@ const actions = {
     try {
       await axios.delete(`${baseUrl}cart/${cartID}`);
       // Optionally, you can update the cart in the store here.
-      commit("setCart", state.cart.filter(item => item.cartID !== cartID));
+      commit(
+        "setCart",
+        state.cart.filter((item) => item.cartID !== cartID)
+      );
       console.log(cartID);
     } catch (error) {
       console.error("Error removing from cart:", error);
@@ -447,21 +464,29 @@ const actions = {
   //     state.cart.push({ ...product, quantity: 1 });
   //   }
   // },
-  async updateCartItemQuantity({ commit, state }, { cartID, prodID, quantity }) {
+  async updateCartItemQuantity(
+    { commit, state },
+    { cartID, prodID, quantity }
+  ) {
     try {
       const response = await axios.patch(`${baseUrl}cart/${prodID}`, {
         quantity,
       });
 
       if (response.status === 200) {
-        const cartItem = state.cart.find(item => item.cartID === cartID && item.prodID === prodID);
+        const cartItem = state.cart.find(
+          (item) => item.cartID === cartID && item.prodID === prodID
+        );
         if (cartItem) {
           cartItem.quantity = quantity;
           commit("setCart", [...state.cart]);
         }
         console.log(cartID);
       } else {
-        console.error("Error updating cart item quantity:", response.statusText);
+        console.error(
+          "Error updating cart item quantity:",
+          response.statusText
+        );
       }
     } catch (error) {
       console.error("Error updating cart item quantity:", error);
@@ -641,7 +666,7 @@ const actions = {
   logout({ commit }) {
     localStorage.removeItem("userToken");
     localStorage.removeItem("userData");
-    commit("clearUser");  
+    commit("clearUser");
     window.location.reload();
   },
 
@@ -826,34 +851,34 @@ const actions = {
       return false;
     }
   },
-async deleteProduct({ commit }, prodID) {
-  try {
-    const response = await axios.delete(`${baseUrl}products/${prodID}`);
-    if (response.status === 200) {
-      commit("setDeletedProduct", response.data);
-      await this.dispatch("getProducts");
+  async deleteProduct({ commit }, prodID) {
+    try {
+      const response = await axios.delete(`${baseUrl}products/${prodID}`);
+      if (response.status === 200) {
+        commit("setDeletedProduct", response.data);
+        await this.dispatch("getProducts");
 
-      Swal.fire({
-        icon: "success",
-        title: "Product Deleted",
-        text: "The product has been deleted successfully.",
-      });
-    } else {
+        Swal.fire({
+          icon: "success",
+          title: "Product Deleted",
+          text: "The product has been deleted successfully.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Delete Failed",
+          text: "An error occurred while deleting the product.",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
       Swal.fire({
         icon: "error",
-        title: "Delete Failed",
-        text: "An error occurred while deleting the product.",
+        title: "Error",
+        text: error.message,
       });
     }
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: error.message,
-    });
-  }
-},
+  },
   async fetchProductForEdit({ commit }, prodID) {
     try {
       const response = await axios.get(`${baseUrl}products/${prodID}`);

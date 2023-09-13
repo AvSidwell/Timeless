@@ -1,48 +1,10 @@
 <template>
   <div>
-    <div v-if="product" class="single-product">
-      <div class="image-gallery">
-        <h2 class="text-start head mx-5">{{ product.prodNAME }}</h2>
-        <img
-          v-for="(image, index) in productImages"
-          :key="index"
-          :src="image"
-          :alt="`Image ${index + 1}`"
-        />
-      </div>
-      <div class="product-details px-5">
-        <div class="justify-content-center d-flex">
-          <p class="text-center mx-3">
-            <span>Price:</span> R{{ product.prodPRICE }}.00
-          </p>
-          <p class="text-center mx-3">
-            <span>Category:</span> {{ product.prodCAT }}
-          </p>
-        </div>
-        <div class="text-center">
-          <button @click="addToCartProduct" class="btnStyle mx-2">
-            Add to Cart
-          </button>
-          <input
-            v-model="quantity"
-            type="number"
-            min="1"
-            placeholder="Quantity"
-            class="text-center my-3"
-          />
-        </div>
-      </div>
-      <p><span>Description:</span> {{ product.prodDESC }}</p>
-      <div class="d-flex justify-content-around">
-        <p><span>Type:</span> {{ product.prodTYPE }}</p>
-        <p><span>Season:</span> {{ product.prodSEASON }}</p>
-        <p><span>Quantity:</span> {{ product.prodQUANTITY }}</p>
-      </div>
-    </div>
+    <div v-if="users"></div>
     <div v-else>
       <Spinner />
     </div>
-    <!-- <cart :cart-items="cart"> </cart> -->
+  
   </div>
 </template>
 
@@ -120,7 +82,7 @@ export default {
             cancelButtonText: "Cancel",
           }).then((result) => {
             if (result.isConfirmed) {
-              this.$router.push("/login"); 
+              this.$router.push("/login");
             }
           });
         }

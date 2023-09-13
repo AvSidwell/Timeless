@@ -41,8 +41,9 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  props: ["cart"],
+  // props: ["cart"],
   computed: {
     cart() {
       return this.$store.state.cart;
@@ -62,9 +63,12 @@ export default {
       });
     },
   },
-  mounted() {
-    this.$store.dispatch("getProducts");
-  },
+  // mounted() {
+  //   this.$store.dispatch("getProducts");
+  // },
+  // mounted() {
+  //   this.$store.dispatch("getCart");
+  // },
 };
 // }
 </script>

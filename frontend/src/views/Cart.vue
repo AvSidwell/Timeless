@@ -18,10 +18,6 @@ export default {
       return this.allCart || [];
     },
   },
-
-  // mounted() {
-  //   this.$store.dispatch("getCart");
-  // },
   mounted() {
     this.$store.dispatch("getCart");
   },

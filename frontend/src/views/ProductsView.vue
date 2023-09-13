@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="products" class="row justify-content-evenly">
+    <div v-if="products" class="">
       <Products/>
     </div>
     <div v-else>Processing...</div>

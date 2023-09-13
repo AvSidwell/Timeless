@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <div class="products-container">
-      <div
-        class="products-sidebar text-center"
+  <div class="">
+    <div class="products-container row">
+      <div class="products-sidebar text-center  col-12 col-md-3 col-sm-12"
         :class="{ 'sticky-top': isSticky, 'on-top': isMobileView }"
       >
         <div>
@@ -38,7 +37,7 @@
           @input="searchByName"
         />
       </div>
-      <div class="products-content" :class="{ 'move-down': isMobileView }">
+      <div class="products-content col-12 col-md-9 col-sm-12" :class="{ 'move-down': isMobileView }">
         <div v-if="filteredProducts" class="row justify-content-evenly">
           <div
             v-for="(product, index) in filteredProducts"
@@ -192,7 +191,7 @@ export default {
   border: solid #2b2828;
 }
 .products-container {
-  display: flex;
+  /* display: flex; */
   font-family: "Keania One", cursive;
 }
 
@@ -239,8 +238,8 @@ span {
 }
 /* ///////////////////////////////////////////////////////////////////////////// */
 .products-sidebar {
-  width: 30%;
-  z-index: 1;
+  /* width: 30%; */
+  /* z-index: 1; */
   padding: 20px;
   box-sizing: border-box;
   border-bottom: 1px solid #ccc;
@@ -253,7 +252,11 @@ span {
 
 @media screen and (max-width: 500px) {
   .products-sidebar {
+    /* width: 100%; */
     display: block;
+    position: sticky;
+    /* top: 0; */
+    /* z-index: 1; */
   }
 
   .move-down {
