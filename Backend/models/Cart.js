@@ -125,18 +125,16 @@
 
   const getCart = (userID, result) => {
     db.query(
-      "SELECT c.cartID, c.quantity, p.prodQUANTITY, p.prodIMG, p.prodNAME, p.prodPRICE, s.userID " +
-        "FROM Cart c " +
-        "INNER JOIN Products p ON c.prodID = p.prodID " +
-        "INNER JOIN Users s ON c.userID = s.userID " +
-        "WHERE c.userID = ?",
+      "SELECT c.cartID, c.quantity, p.prodQUANTITY, p.prodIMG, p.prodNAME, p.prodPRICE, s.userID FROM Cart c INNER JOIN Products p ON c.prodID = p.prodID INNER JOIN Users s ON c.userID = s.userID WHERE c.userID = ?",
       [userID],
       (err, results) => {
         if (err) {
           console.log(err);
+          console.log("Err getting data: ", results);
           result(err, null);
         } else {
           result(null, results);
+          console.log("Getting data: ", results);
         }
       }
     );

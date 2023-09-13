@@ -4,7 +4,7 @@ const { getCart, getCartById, insertCart, updateCartById, deleteCartById } = req
 
 // Get All in Cart
 const showCart = (req, res) => {
-    getCart((err, results) => {
+    getCart(req.params.userID, (err, results) => {
         if (err){
             res.send(err);
         }else{

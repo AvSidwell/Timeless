@@ -66,7 +66,7 @@ const {
   deleteCart,
 } = CartController;
 // Get All Cart
-router.get("/cart", showCart);
+router.get("/cart/:userID", showCart);
 
 // Get Single Cart
 router.get("/cart/:id", showCartById);
