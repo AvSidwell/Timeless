@@ -68,23 +68,27 @@ export default {
     await this.$store.dispatch("getProducts");
   },
   methods: {
-    async editProduct(updatedProduct) {
-      try {
-        // Send a PATCH request to update the product
-        const response = await axios.patch(
-          `http://localhost:5000/products/${updatedProduct.prodID}`,
-          updatedProduct
-        );
+    // async editProduct(updatedProduct) {
+    //   try {
+    
+    //     const response = await axios.patch(
+    //       `http://localhost:5000/products/${updatedProduct.prodID}`,
+    //       updatedProduct
+    //     );
 
-        alert("Product updated successfully");
-        await this.$store.dispatch("getProducts"); // Refresh the product list
-        this.editedProduct = null;
-      } catch (error) {
-        console.error("Error editing product:", error);
-      }
-    },
-    editProduct(product) {
-      this.$emit("edit-product", product);
+    //     alert("Product updated successfully");
+    //     await this.$store.dispatch("getProducts"); 
+    //     this.editedProduct = null;
+    //   } catch (error) {
+    //     console.error("Error editing product:", error);
+    //   }
+    // },
+    // editProduct(product) {
+    //   this.$emit("edit-product", product);
+    // },
+    editProductModal(product) {
+      this.editedProduct = { ...product }; // Set the selected product
+      this.$refs.editProductModal.show(); // Show the modal (use a ref)
     },
     deleteProductModal(product) {
       Swal.fire({

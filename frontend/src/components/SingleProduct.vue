@@ -1,18 +1,47 @@
 <template>
   <div>
     <div v-if="product" class="single-product">
-      <img :src="product.prodIMG" :alt="product.prodNAME" />
-      <div class="product-details">
-        <h2>{{ product.prodNAME }}</h2>
-        <p>Price: R {{ product.prodPRICE }}.00</p>
-        <p>Category: {{ product.prodCAT }}</p>
+      <div class="image-gallery">
+        <h2 class="text-start head mx-5">{{ product.prodNAME }}</h2>
+        <img
+          v-for="(image, index) in productImages"
+          :key="index"
+          :src="image"
+          :alt="`Image ${index + 1}`"
+        />
       </div>
-      <button @click="addToCartProduct" class="btn btn-primary">
-        Add to Cart
-      </button>
-      <input v-model="quantity" type="number" min="1" placeholder="Quantity" />
+      <div class="product-details px-5">
+        <div class="justify-content-center d-flex">
+          <p class="text-center mx-3">
+            <span>Price:</span> R{{ product.prodPRICE }}.00
+          </p>
+          <p class="text-center mx-3">
+            <span>Category:</span> {{ product.prodCAT }}
+          </p>
+        </div>
+        <div class="text-center">
+          <button @click="addToCartProduct" class="btnStyle mx-2">
+            Add to Cart
+          </button>
+          <input
+            v-model="quantity"
+            type="number"
+            min="1"
+            placeholder="Quantity"
+            class="text-center my-3"
+          />
+        </div>
+      </div>
+      <p><span>Description:</span> {{ product.prodDESC }}</p>
+      <div class="d-flex justify-content-around">
+        <p><span>Type:</span> {{ product.prodTYPE }}</p>
+        <p><span>Season:</span> {{ product.prodSEASON }}</p>
+        <p><span>Quantity:</span> {{ product.prodQUANTITY }}</p>
+      </div>
     </div>
-    <div v-else><Spinner /></div>
+    <div v-else>
+      <Spinner />
+    </div>
     <cart :cart-items="cart"> </cart>
   </div>
 </template>
@@ -37,149 +66,70 @@ export default {
     cart() {
       return this.$store.state.cart;
     },
+    productImages() {
+      const parsedImages = JSON.parse(this.product.prodIMG);
+      return Object.values(parsedImages).filter((img) => img !== "");
+    },
   },
   methods: {
-    // async addToCartProduct() {
-    //   try {
-    //     // Retrieve user data from localStorage
-    //     const userDataJSON = localStorage.getItem("userData");
-    //     if (userDataJSON) {
-    //       const userData = JSON.parse(userDataJSON);
-    //       const userID = userData.result.userID;
-    //       console.log(userData.result.userID);
-    //       await this.$store.dispatch("addToCart", {
-    //         const product = {
-    //         prodNAME: this.prodNAME,
-    //         prodPRICE: this.prodPRICE,
-    //         prodQUANTITY: this.prodQUANTITY,
-    //         prodIMG: this.prodIMG,
-    //         userID: userID,}
-    //       });
+    async addToCartProduct() {
+      try {
+        const userDataJSON = localStorage.getItem("userData");
+        if (userDataJSON) {
+          const userData = JSON.parse(userDataJSON);
+          const userID = userData.result.userID;
 
-    //       console.log("Added to cart:", this.product);
-    //       await this.$store.dispatch("getCart");
-    //       console.log("Updated cart information:", this.$store.state.cart);
+          const product = {
+            prodID: this.product.prodID,
+            userID: userID,
+            quantity: this.quantity,
+          };
 
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "Added to Cart",
-    //         text: "The product has been added to your cart.",
-    //       });
-    //     } else {
-    //       console.error("User data not found in localStorage.");
-    //     }
-    //   } catch (error) {
-    //     console.error("Error adding to cart:", error);
+          const existingProductIndex = this.$store.state.cart.findIndex(
+            (item) => item.prodID === product.prodID
+          );
 
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Error",
-    //       text: "An error occurred while adding the product to your cart.",
-    //     });
-    //   }
-    // },
-//     async addToCartProduct() {
-//   try {
-   
-//     const userDataJSON = localStorage.getItem("userData");
-//     if (userDataJSON) {
-//       const userData = JSON.parse(userDataJSON);
-//       const userID = userData.result.userID;
+          if (existingProductIndex !== -1) {
+            const existingProduct =
+              this.$store.state.cart[existingProductIndex];
+            await this.$store.dispatch("updateCartItem", {
+              index: existingProductIndex,
+              newQuantity: existingProduct.quantity + this.quantity,
+            });
+          } else {
+            await this.$store.dispatch("addToCart", product);
+          }
 
-  
-//       const product = {
-//         prodID: this.product.prodID,
-//         userID: userID, 
-//       };
+          await this.$store.dispatch("getCart");
 
-    
-//       await this.$store.dispatch("addToCart", product);
+          Swal.fire({
+            icon: "success",
+            title: "Added to Cart",
+            text: "The product has been added to your cart.",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Not Logged In",
+            text: "You need to log in to add products to your cart.",
+            confirmButtonText: "Log In",
+            showCancelButton: true,
+            cancelButtonText: "Cancel",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login"); 
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error adding to cart:", error);
 
-//       console.log("Added to cart:", product);
-//       await this.$store.dispatch("getCart");
-//       console.log("Updated cart information:", this.$store.state.cart);
-
-//       Swal.fire({
-//         icon: "success",
-//         title: "Added to Cart",
-//         text: "The product has been added to your cart.",
-//       });
-//     } else {
-//       console.error("User data not found in localStorage.");
-//     }
-//   } catch (error) {
-//     console.error("Error adding to cart:", error);
-
-//     Swal.fire({
-//       icon: "error",
-//       title: "Error",
-//       text: "An error occurred while adding the product to your cart.",
-//     });
-//   }
-// },
-async addToCartProduct() {
-  try {
-    const userDataJSON = localStorage.getItem("userData");
-    if (userDataJSON) {
-      const userData = JSON.parse(userDataJSON);
-      const userID = userData.result.userID;
-
-      const product = {
-        prodID: this.product.prodID,
-        userID: userID,
-      };
-
-      const existingProductIndex = this.$store.state.cart.findIndex(
-        (item) => item.prodID === product.prodID
-      );
-
-      if (existingProductIndex !== -1) {
-        const existingProduct = this.$store.state.cart[existingProductIndex];
-        await this.$store.dispatch("updateCartItem", {
-          index: existingProductIndex,
-          newQuantity: existingProduct.quantity + this.quantity,
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "An error occurred while adding the product to your cart.",
         });
-      } else {
-     
-        product.quantity = this.quantity;
-        await this.$store.dispatch("addToCart", product);
       }
-
-    
-      await this.$store.dispatch("getCart");
-
-      Swal.fire({
-        icon: "success",
-        title: "Added to Cart",
-        text: "The product has been added to your cart.",
-      });
-    } else {
-      console.error("User data not found in localStorage.");
-    }
-  } catch (error) {
-    console.error("Error adding to cart:", error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "An error occurred while adding the product to your cart.",
-    });
-  }
-},
-
-
-
-    getAllProductValues() {
-      const cartItems = this.$store.state.cart;
-      const allProductValues = [];
-      cartItems.forEach((item) => {
-        const product = {
-          prodID: item.prodID,
-          userID: userID,
-        };
-        allProductValues.push(product);
-      });
-      console.log("All Product Values:", allProductValues);
     },
   },
   async created() {
@@ -194,16 +144,40 @@ async addToCartProduct() {
 </script>
 
 <style scoped>
+* {
+  font-family: "Keania One", cursive;
+}
 .single-product {
-  text-align: center;
+  background-color: #9ba38b;
+}
+.head {
+  color: #e9e9e9;
+  text-shadow: 2px 4px 3px #2b2828;
+}
+img {
+  margin: 1.5rem;
+  height: 15rem;
+}
+.btnStyle {
+  border-radius: 0.4rem;
+  color: #9ba38b;
+  background-color: #2b2828;
+  border: solid #9ba38b;
+  box-shadow: 1.5px 2px 5px #2b2828;
 }
 
-.single-product img {
-  max-width: 100%;
-  height: auto;
+input {
+  margin-top: 1rem;
+  border-radius: 0.4rem;
+  color: #9ba38b;
+  background-color: #2b2828;
+  border: solid #9ba38b;
+  box-shadow: 1.5px 2px 5px #2b2828;
 }
 
-.product-details {
-  margin-top: 10px;
+span {
+  color: #e9e9e9;
+  text-shadow: 1px 2px 1.5px #2b2828;
+  font-size: large;
 }
 </style>

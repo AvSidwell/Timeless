@@ -1,20 +1,22 @@
 <template>
-  <form @submit.prevent="login">
-    <input
-      type="text"
-      v-model="form.emailAdd"
-      placeholder="Email"
-      autocomplete="username"
-    />
-    <input
-      type="password"
-      v-model="form.userPass"
-      placeholder="Password"
-      autocomplete="current-password"
-    />
-    <button type="submit">Login</button>
-    <p v-if="loginError" class="error-message">{{ loginError }}</p>
-  </form>
+  <div class="contain">
+    <form @submit.prevent="login">
+      <input
+        type="text"
+        v-model="form.emailAdd"
+        placeholder="Email"
+        autocomplete="username"
+      />
+      <input
+        type="password"
+        v-model="form.userPass"
+        placeholder="Password"
+        autocomplete="current-password"
+      />
+      <button type="submit">Login</button>
+      <p v-if="loginError" class="error-message">{{ loginError }}</p>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -52,7 +54,7 @@ export default {
           localStorage.setItem("userData", JSON.stringify(userData));
           this.$router.push("/");
         } else {
-          this.$router.push("/");
+          // this.$router.push("/");
           console.log(response);
         }
       } catch (error) {
@@ -61,6 +63,7 @@ export default {
         } else {
           console.log(error);
         }
+        this.$router.push("/");
       }
     },
   },
@@ -68,6 +71,7 @@ export default {
 </script>
 
 <style scoped>
+
 .error-message {
   color: red;
   margin-top: 10px;
@@ -78,5 +82,50 @@ export default {
 .error-message {
   color: red;
   margin-top: 10px;
+}
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #9ba38b;
+  border-radius: 5px;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  box-shadow: 2px 2px 2px #2b2828;
+}
+form:hover {
+  background-color: #2b2828;
+}
+form:hover label {
+  color: #e9e9e9;
+}
+label {
+  display: block;
+  color:  #2b2828;
+  margin-bottom: 8px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid   #e9e9e9;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button[type="submit"] {
+  background-color: #2b2828;
+  color: #e9e9e9;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color:  #e9e9e9;
+  color: #2b2828;
 }
 </style>

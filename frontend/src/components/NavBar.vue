@@ -7,7 +7,7 @@
         >Admin</router-link
       >
       <router-link to="/about" class="nav-item">About</router-link>
-      <router-link to="/" class="nav-item">Contact</router-link>
+      <router-link to="/Contact" class="nav-item">Contact</router-link>
       <router-link to="/Cart" class="nav-item">Cart</router-link>
       <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
       <button v-else @click="logout">Logout</button>

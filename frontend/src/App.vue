@@ -3,12 +3,14 @@
     <NavBar/>
   </nav>
   <router-view/>
+ <FooterComp/>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar.vue'
+import FooterComp from '@/components/Footer.vue'
 export default {
-  components: {NavBar}
+  components: {NavBar, FooterComp}
 }
 </script>
 <style>

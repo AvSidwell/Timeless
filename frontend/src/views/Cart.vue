@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="cart" class="row p-4 justify-content-evenly">
+    <div v-if="cart" class="row justify-content-evenly">
       <cart />
     </div>
     <div v-else>Cart is empty.</div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="registration">
+  <div class="contain mb-5">
     <h2>Register</h2>
     <form @submit.prevent="registerUser">
       <div class="form-group">
@@ -108,42 +108,51 @@ export default {
 </script>
 
 <style scoped>
-.registration {
+
+
+form {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #9ba38b;
   border-radius: 5px;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  box-shadow: 2px 2px 2px #2b2828;
 }
-
-.form-group {
-  margin-bottom: 15px;
+form:hover {
+  background-color: #2b2828;
 }
-
+form:hover label {
+  color: #e9e9e9;
+}
 label {
   display: block;
-  font-weight: bold;
+  color:  #2b2828;
+  margin-bottom: 8px;
 }
 
-.input {
+input,
+textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid   #e9e9e9;
+  border-radius: 4px;
   font-size: 16px;
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
+button[type="submit"] {
+  background-color: #2b2828;
+  color: #e9e9e9;
   padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
 }
 
-.error {
-  color: red;
-  margin-top: 10px;
+button[type="submit"]:hover {
+  background-color:  #e9e9e9;
+  color: #2b2828;
 }
 </style>

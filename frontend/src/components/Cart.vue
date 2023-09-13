@@ -49,21 +49,21 @@ export default {
     },
   },
   methods: {
-    mounted() {
-      this.$store.dispatch("getProducts");
-    },
-
+    
     removeItem(cartID) {
       this.$store.dispatch("removeItem", cartID);
       console.log(cartID)
     },
     updateQuantity(item) {
-    this.$store.dispatch('updateCartItemQuantity', {
-      cartID: item.cartID,
-      prodID: item.prodID,
-      quantity: item.quantity,
-    });
+      this.$store.dispatch('updateCartItemQuantity', {
+        cartID: item.cartID,
+        prodID: item.prodID,
+        quantity: item.quantity,
+      });
+    },
   },
+  mounted() {
+    this.$store.dispatch("getProducts");
   },
 };
 // }

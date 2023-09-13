@@ -54,15 +54,53 @@
           required
         />
       </div>
+      <!-- images -->
       <div class="form-group">
-        <label for="prodImage">Product Image (URL)</label>
+        <label for="prodImage1">Product Image 1 (URL)</label>
         <input
           type="text"
           class="form-control"
-          v-model="newProduct.prodIMG"
+          v-model="newProduct.prodIMG[0]"
           required
         />
       </div>
+      <div class="form-group">
+        <label for="prodImage2">Product Image 2 (URL)</label>
+        <input
+          type="text"
+          class="form-control"
+          v-model="newProduct.prodIMG[1]"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="prodImage3">Product Image 3 (URL)</label>
+        <input
+          type="text"
+          class="form-control"
+          v-model="newProduct.prodIMG[2]"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="prodImage4">Product Image 4 (URL)</label>
+        <input
+          type="text"
+          class="form-control"
+          v-model="newProduct.prodIMG[3]"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="prodImage5">Product Image 5 (URL)</label>
+        <input
+          type="text"
+          class="form-control"
+          v-model="newProduct.prodIMG[4]"
+          required
+        />
+      </div>
+      <!-- end of images -->
       <div class="form-group">
         <label for="prodQuantity">Product Quantity</label>
         <input
@@ -86,7 +124,7 @@
 import Swal from "sweetalert2";
 
 export default {
-    
+
   data() {
     return {
       newProduct: {
@@ -96,7 +134,13 @@ export default {
         prodCAT: "",
         prodTYPE: "",
         prodSEASON: "",
-        prodIMG: "",
+        prodIMG: {
+        image1: "",
+        image2: "",
+        image3: "",
+        image4: "",
+        image5: "",
+      },
         prodQUANTITY: 0,
       },
     };

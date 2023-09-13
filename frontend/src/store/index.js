@@ -142,6 +142,7 @@ const actions = {
     try {
       const response = await axios.get(`${baseUrl}products`);
       commit("setProducts", response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -150,6 +151,7 @@ const actions = {
     try {
       const response = await axios.get(`${baseUrl}products/${prodID}`);
       commit("setProduct", response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching product:", error);
     }
@@ -405,23 +407,33 @@ const actions = {
       throw error;
     }
   },
+  // async removeItem({ commit }, cartID) {
+  //   try {
+  //     await axios.delete(`${baseUrl}cart/${cartID}`);
+  //     commit("removeItem", cartID);
+  //     console.log(cartID);
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Item Removed",
+  //       text: "The item has been successfully removed from the cart.",
+  //     });
+  //   } catch (error) {
+  //     console.error("Error removing from cart:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "An error occurred while removing the item from the cart.",
+  //     });
+  //   }
+  // },
   async removeItem({ commit }, cartID) {
     try {
       await axios.delete(`${baseUrl}cart/${cartID}`);
-      commit("removeItem", cartID);
+      // Optionally, you can update the cart in the store here.
+      commit("setCart", state.cart.filter(item => item.cartID !== cartID));
       console.log(cartID);
-      Swal.fire({
-        icon: "success",
-        title: "Item Removed",
-        text: "The item has been successfully removed from the cart.",
-      });
     } catch (error) {
       console.error("Error removing from cart:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An error occurred while removing the item from the cart.",
-      });
     }
   },
 
@@ -435,37 +447,56 @@ const actions = {
   //     state.cart.push({ ...product, quantity: 1 });
   //   }
   // },
-
-  async updateCartItemQuantity(
-    { commit, state },
-    { cartID, prodID, quantity }
-  ) {
+  async updateCartItemQuantity({ commit, state }, { cartID, prodID, quantity }) {
     try {
       const response = await axios.patch(`${baseUrl}cart/${prodID}`, {
         quantity,
       });
 
       if (response.status === 200) {
-        // commit("updateCartItemQuantity", { prodID, quantity });
-        const cartItem = state.cart.find(
-          (item) => item.cartID === cartID && item.prodID === prodID
-        );
+        const cartItem = state.cart.find(item => item.cartID === cartID && item.prodID === prodID);
         if (cartItem) {
           cartItem.quantity = quantity;
           commit("setCart", [...state.cart]);
         }
         console.log(cartID);
       } else {
-        console.error(
-          "Error updating cart item quantity:",
-          response.statusText
-        );
+        console.error("Error updating cart item quantity:", response.statusText);
       }
     } catch (error) {
       console.error("Error updating cart item quantity:", error);
-      throw error;
     }
   },
+  // async updateCartItemQuantity(
+  //   { commit, state },
+  //   { cartID, prodID, quantity }
+  // ) {
+  //   try {
+  //     const response = await axios.patch(`${baseUrl}cart/${prodID}`, {
+  //       quantity,
+  //     });
+
+  //     if (response.status === 200) {
+  //       // commit("updateCartItemQuantity", { prodID, quantity });
+  //       const cartItem = state.cart.find(
+  //         (item) => item.cartID === cartID && item.prodID === prodID
+  //       );
+  //       if (cartItem) {
+  //         cartItem.quantity = quantity;
+  //         commit("setCart", [...state.cart]);
+  //       }
+  //       console.log(cartID);
+  //     } else {
+  //       console.error(
+  //         "Error updating cart item quantity:",
+  //         response.statusText
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating cart item quantity:", error);
+  //     throw error;
+  //   }
+  // },
 
   ///Product
   sortProducts({ commit, state }, { field, order }) {
@@ -610,7 +641,7 @@ const actions = {
   logout({ commit }) {
     localStorage.removeItem("userToken");
     localStorage.removeItem("userData");
-    commit("clearUser");
+    commit("clearUser");  
     window.location.reload();
   },
 

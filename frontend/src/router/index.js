@@ -6,6 +6,7 @@ import Login from "../views/Login.vue";
 import store from "../store";
 import ProductEditModal from "../components/ProductEditModal.vue";
 import ProductAdd from "../components/ProductAdd.vue";
+import footer from "../components/Footer.vue";
 
 const routes = [
   {
@@ -30,6 +31,12 @@ const routes = [
     name: "Cart",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Cart.vue"),
+  },
+  {
+    path: "/Contact",
+    name: "Contact",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../components/Contact.vue"),
   },
   {
     path: "/Admin",
