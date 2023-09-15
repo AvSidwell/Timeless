@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-12 col-sm-12">
+      <div class="col-12 col-sm-12 mb-5">
         <EditProductModal :product="editedProduct" @edit="editProduct" />
       </div>
-      <div class="col-12 col-sm-6">
+      <div class="col-12 col-sm-6 mb-5">
         <ProductAdd />
       </div>
     </div>
     <table class="table">
-      <thead>
+      <thead class="">
         <tr>
           <th>Product Name</th>
           <th>Product Price</th>
@@ -21,16 +21,30 @@
       </thead>
       <tbody>
         <tr v-for="product in Products" :key="product.prodID">
-          <td>{{ product.prodNAME }}</td>
-          <td>{{ product.prodPRICE }}</td>
+          <td data-label="Product Name">{{ product.prodNAME }}</td>
+          <td data-label="Price">{{ product.prodPRICE }}</td>
           <td>{{ product.prodQUANTITY }}</td>
-          <td><img :src="product.prodIMG" :alt="product.prodNAME" /></td>
-          <td>{{ product.prodCAT }}</td>
+          <td data-label="Quantity">
+            <img
+              data-label="img"
+              :src="productImages(product)[activeImageIndex]"
+              :alt="`Image ${activeImageIndex + 1}`"
+            />
+          </td>
+          <td data-label="CAT">{{ product.prodCAT }}</td>
           <td>
-            <button @click="deleteProductModal(product)" class="btn btn-danger">
+            <button
+              data-label="Action"
+              @click="deleteProductModal(product)"
+              class="btn btn-danger text-end"
+            >
               Delete
             </button>
-            <button @click="editProductModal(product)" class="btn btn-primary">
+            <button
+              data-label="Action"
+              @click="editProductModal(product)"
+              class="btn btn-primary text-end"
+            >
               Edit
             </button>
           </td>
@@ -60,6 +74,15 @@ export default {
     };
   },
   computed: {
+    productImages() {
+      return (product) => {
+        if (product.prodIMG) {
+          const parsedImages = JSON.parse(product.prodIMG);
+          return Object.values(parsedImages).filter((img) => img !== "");
+        }
+        return [];
+      };
+    },
     Products() {
       return this.$store.state.products;
     },
@@ -70,14 +93,14 @@ export default {
   methods: {
     // async editProduct(updatedProduct) {
     //   try {
-    
+
     //     const response = await axios.patch(
-    //       `http://localhost:5000/products/${updatedProduct.prodID}`,
+    //       `https://timeless-mcgx.onrender.com/products/${updatedProduct.prodID}`,
     //       updatedProduct
     //     );
 
     //     alert("Product updated successfully");
-    //     await this.$store.dispatch("getProducts"); 
+    //     await this.$store.dispatch("getProducts");
     //     this.editedProduct = null;
     //   } catch (error) {
     //     console.error("Error editing product:", error);
@@ -108,3 +131,50 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.table-container {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
+
+@media (max-width: 500px) {
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    margin-bottom: 0.625rem;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .table tbody td {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  .table tbody td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: inline-block;
+    width: 50%;
+    margin-right: 0.625rem;
+  }
+}
+</style>

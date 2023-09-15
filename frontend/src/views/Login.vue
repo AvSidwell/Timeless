@@ -71,6 +71,9 @@ export default {
 </script>
 
 <style scoped>
+* {
+  font-family: "Keania One", cursive;
+}
 
 .error-message {
   color: red;

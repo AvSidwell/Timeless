@@ -1,148 +1,92 @@
 <template>
   <div>
-    <div v-if="users"></div>
-    <div v-else>
-      <Spinner />
+    <div v-if="status === 200">
+      <h2>Users</h2>
+      <div class="row">
+        <div class="col-md-4" v-for="user in results" :key="user.userID">
+          <div class="card">
+            <p style="display: none">{{ user.userID }}</p>
+            <h2><span>Name: </span> {{ user.firstName }}</h2>
+            <h4><span>Last Name: </span> {{ user.lastName }}</h4>
+            <p><span>Email: </span>{{ user.emailAdd }}</p>
+            <p><span>Gender: </span>{{ user.gender }}</p>
+            <p><span>Date of Birth: </span>{{ user.userDOB }}</p>
+            <p>User Image: <img :src="user.profileUrl" alt="User image"  style="height: 2rem; width: 2rem"/></p>
+            <p><span>User Role: </span> {{ user.userRole }}</p>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              @click="populateForm(user)"
+            >
+              Edit
+            </button>
+            <button @click="deleteUser(user.userID)">Delete</button>
+          </div>
+        </div>
+      </div>
     </div>
-  
+    <div v-else>
+      <!-- Handle different loading and error scenarios -->
+      <div v-if="status === 404">User data not found.</div>
+      <div v-else-if="status === 500">
+        Internal server error. Please try again later.
+      </div>
+      <div v-else>Loading...</div>
+    </div>
   </div>
 </template>
 
 <script>
-import Swal from "sweetalert2";
 import Spinner from "./Spinner.vue";
 
 export default {
   components: { Spinner },
   data() {
     return {
-      error: null,
-      prodID: parseInt(this.$route.params.prodID),
-      quantity: 1,
+      status: null, // Variable to store the response status
+      results: [], // Variable to store user data
     };
   },
-  computed: {
-    product() {
-      return this.$store.state.product;
-    },
-    cart() {
-      return this.$store.state.cart;
-    },
-    productImages() {
-      const parsedImages = JSON.parse(this.product.prodIMG);
-      return Object.values(parsedImages).filter((img) => img !== "");
-    },
-  },
   methods: {
-    async addToCartProduct() {
-      try {
-        const userDataJSON = localStorage.getItem("userData");
-        if (userDataJSON) {
-          const userData = JSON.parse(userDataJSON);
-          const userID = userData.result.userID;
-          console.log(userID);
+    // populateForm(user) {
+    //   // Implement the logic to populate the form with user data for editing
+    //   // You can use this user object to set values in your form fields or trigger a modal
+    // },
+    // deleteUser(userId) {
+    //   // Implement the logic to delete a user by userId
+    //   // You may dispatch an action to handle this deletion
+    // },
+    fetchUserData() {
+      const baseUrl = "https://timeless-mcgx.onrender.com/users";
 
-          const product = {
-            prodID: this.prodID,
-            userID: userID,
-            quantity: this.quantity,
-          };
-          console.log(this.prodID);
-          console.log(this.quantity);
+      fetch(baseUrl)
+        .then((response) => {
+          this.status = response.status; // Store the response status
+          return response.json();
+        })
+        .then((data) => {
+          this.results = data;
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
 
-          const existingProductIndex = this.$store.state.cart.findIndex(
-            (item) => item.prodID === product.prodID
-          );
-
-          if (existingProductIndex !== -1) {
-            const existingProduct =
-              this.$store.state.cart[existingProductIndex];
-            await this.$store.dispatch("updateCartItem", {
-              index: existingProductIndex,
-              newQuantity: existingProduct.quantity + this.quantity,
-            });
+          // Handle different error scenarios by setting the status accordingly
+          if (error instanceof TypeError) {
+            this.status = 404; // Not Found error
           } else {
-            await this.$store.dispatch("addToCart", product);
+            this.status = 500; // Internal Server Error
           }
-
-          await this.$store.dispatch("getCart");
-
-          Swal.fire({
-            icon: "success",
-            title: "Added to Cart",
-            text: "The product has been added to your cart.",
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Not Logged In",
-            text: "You need to log in to add products to your cart.",
-            confirmButtonText: "Log In",
-            showCancelButton: true,
-            cancelButtonText: "Cancel",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.$router.push("/login");
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Error adding to cart:", error);
-
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "An error occurred while adding the product to your cart.",
         });
-      }
     },
   },
-  async created() {
-    const prodID = this.$route.params.prodID;
-    try {
-      await this.$store.dispatch("getProduct", prodID);
-    } catch (error) {
-      this.error = "Product not found";
-    }
+  mounted() {
+    this.fetchUserData(); // Call the fetchUserData method when the component is mounted
   },
 };
 </script>
 
 <style scoped>
-* {
-  font-family: "Keania One", cursive;
-}
-.single-product {
-  background-color: #9ba38b;
-}
-.head {
-  color: #e9e9e9;
-  text-shadow: 2px 4px 3px #2b2828;
-}
-img {
-  margin: 1.5rem;
-  height: 15rem;
-}
-.btnStyle {
-  border-radius: 0.4rem;
-  color: #9ba38b;
-  background-color: #2b2828;
-  border: solid #9ba38b;
-  box-shadow: 1.5px 2px 5px #2b2828;
-}
-
-input {
-  margin-top: 1rem;
-  border-radius: 0.4rem;
-  color: #9ba38b;
-  background-color: #2b2828;
-  border: solid #9ba38b;
-  box-shadow: 1.5px 2px 5px #2b2828;
-}
-
-span {
-  color: #e9e9e9;
-  text-shadow: 1px 2px 1.5px #2b2828;
-  font-size: large;
-}
+/* Add your CSS styles for the user table here */
 </style>

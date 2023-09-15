@@ -6,12 +6,12 @@
       >
         <div>
           <h5 class="text-start">Sort By:</h5>
-          <button class="btnStyle m-1" @click="sortByName('asc')">
+          <!-- <button class="btnStyle m-1" @click="sortByName('asc')">
             Name(Asc)
           </button>
           <button class="btnStyle m-1" @click="sortByName('desc')">
             Name(Desc)
-          </button>
+          </button> -->
           <button class="btnStyle m-1" @click="sortByPrice('asc')">
             Price(Asc)
           </button>
@@ -47,7 +47,8 @@
             <router-link
               :to="{ name: 'Single', params: { prodID: product.prodID } }"
             >
-            <h6 class="name text-start ms-4">{{ product.prodNAME }}</h6>
+            
+            <h6 class="name text-start ms-4">{{ product.prodName }}</h6>
               <div class="image-gallery">
                 <img
                   :src="productImages(product)[activeImageIndex]"
@@ -82,14 +83,14 @@ export default {
   },
   computed: {
     productImages() {
-      return (product) => {
-        if (product.prodIMG) {
-          const parsedImages = JSON.parse(product.prodIMG);
-          return Object.values(parsedImages).filter((img) => img !== "");
-        }
-        return [];
-      };
-    },
+  return (product) => {
+    if (product && product.prodIMG) {
+      const parsedImages = JSON.parse(product.prodIMG);
+      return Object.values(parsedImages).filter((img) => img !== "");
+    }
+    return [];
+  };
+},
     screenWidth() {
       return window.innerWidth;
     },
@@ -131,14 +132,12 @@ export default {
         const query = this.searchQuery.toLowerCase();
         filtered = filtered.filter(
           (product) =>
-            product.prodNAME.toLowerCase().includes(query) ||
+            product.prodName.toLowerCase().includes(query) ||
             product.prodCAT.toLowerCase().includes(query)
         );
       }
       if (this.$store.state.sortBy === "name") {
-        filtered = [...filtered].sort((a, b) =>
-          a.prodNAME.localeCompare(b.prodNAME)
-        );
+        filtered = [...filtered].sort((a, b) => a.prodName - b.prodName);
       } else if (this.$store.state.sortBy === "price") {
         filtered = [...filtered].sort((a, b) => a.prodPRICE - b.prodPRICE);
       }
@@ -178,6 +177,9 @@ export default {
 </script>
 
 <style scoped>
+* {
+  font-family: "Keania One", cursive;
+}
 .btnStyle {
   border-radius: 0.4rem;
   color: #9ba38b;
@@ -266,7 +268,7 @@ span {
 
 
 img {
-  max-width: 100%;
+  width: 20rem;
   height: 25rem;
 }
 </style>

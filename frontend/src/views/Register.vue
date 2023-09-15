@@ -30,7 +30,7 @@
         <label for="userDOB">Date of Birth:</label>
         <input type="date" id="userDOB" v-model="form.userDOB" class="input" />
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="userRole">User Role:</label>
         <input
           type="text"
@@ -38,7 +38,7 @@
           v-model="form.userRole"
           class="input"
         />
-      </div>
+      </div> -->
       <div class="form-group">
         <label for="emailAdd">Email:</label>
         <input
@@ -83,10 +83,10 @@ export default {
         lastName: "",
         gender: "",
         userDOB: "",
-        userRole: "",
+        userRole: "user",
         emailAdd: "",
         userPass: "",
-        profileUrl: "",
+        profileUrl: "https://i.postimg.cc/gJ3vvLbC/123.webp",
       },
       registrationError: null,
     };
@@ -108,7 +108,9 @@ export default {
 </script>
 
 <style scoped>
-
+* {
+  font-family: "Keania One", cursive;
+}
 
 form {
   max-width: 400px;

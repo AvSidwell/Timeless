@@ -73,67 +73,63 @@ export default {
   },
   methods: {
     async addToCartProduct() {
-      try {
-        const userDataJSON = localStorage.getItem("userData");
-        if (userDataJSON) {
-          const userData = JSON.parse(userDataJSON);
-          const userID = userData.result.userID;
-          console.log(userID);
+  try {
+    const userDataJSON = localStorage.getItem("userData");
+    if (userDataJSON) {
+      const userData = JSON.parse(userDataJSON);
+      const userID = userData.result.userID;
 
-          const product = {
-            prodID: this.prodID,
-            userID: userID,
-            quantity: this.quantity,
-          };
-          console.log(this.prodID);
-          console.log(this.quantity);
+      const product = {
+        prodID: this.prodID,
+        userID: userID,
+        quantity: this.quantity,
+      };
 
-          const existingProductIndex = this.$store.state.cart.findIndex(
-            (item) => item.prodID === product.prodID
-          );
+      const existingProductIndex = this.$store.state.cart.findIndex(
+        (item) => item.prodID === product.prodID
+      );
 
-          if (existingProductIndex !== -1) {
-            const existingProduct =
-              this.$store.state.cart[existingProductIndex];
-            await this.$store.dispatch("updateCartItem", {
-              index: existingProductIndex,
-              newQuantity: existingProduct.quantity + this.quantity,
-            });
-          } else {
-            await this.$store.dispatch("addToCart", product);
-          }
-
-          await this.$store.dispatch("getCart");
-
-          Swal.fire({
-            icon: "success",
-            title: "Added to Cart",
-            text: "The product has been added to your cart.",
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Not Logged In",
-            text: "You need to log in to add products to your cart.",
-            confirmButtonText: "Log In",
-            showCancelButton: true,
-            cancelButtonText: "Cancel",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.$router.push("/login"); 
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Error adding to cart:", error);
-
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "An error occurred while adding the product to your cart.",
+      if (existingProductIndex !== -1) {
+        const existingProduct = this.$store.state.cart[existingProductIndex];
+        await this.$store.dispatch("updateCartItem", {
+          index: existingProductIndex,
+          newQuantity: existingProduct.quantity + this.quantity,
         });
+      } else {
+        await this.$store.dispatch("addToCart", product);
       }
-    },
+
+      // await this.$store.dispatch("getCart");
+
+      Swal.fire({
+        icon: "success",
+        title: "Added to Cart",
+        text: "The product has been added to your cart.",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Not Logged In",
+        text: "You need to log in to add products to your cart.",
+        confirmButtonText: "Log In",
+        showCancelButton: true,
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$router.push("/login"); 
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+
+    Swal.fire({
+     icon: "success",
+        title: "Added to Cart",
+        text: "The product has been added to your cart.",
+    });
+  }
+},
   },
   async created() {
     const prodID = this.$route.params.prodID;

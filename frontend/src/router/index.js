@@ -6,6 +6,7 @@ import Login from "../views/Login.vue";
 import store from "../store";
 import ProductEditModal from "../components/ProductEditModal.vue";
 import ProductAdd from "../components/ProductAdd.vue";
+import userProfile from "../components/userProfile.vue";
 import footer from "../components/Footer.vue";
 
 const routes = [
@@ -39,6 +40,12 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../components/Contact.vue"),
   },
   {
+    path: "/Users",
+    name: "Users",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Users.vue"),
+  },
+  {
     path: "/Admin",
     name: "Admin",
     component: () =>
@@ -62,6 +69,11 @@ const routes = [
     name: "ProductAdd",
     component: ProductAdd,
   },
+  {
+    path: "/userProfile",
+    name: "userProfile",
+    component: userProfile,
+  },
 ];
 
 const router = createRouter({
@@ -69,25 +81,25 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((route) => route.meta.requiresAuth)) {
-    // Check if the user is authenticated
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      const userDataObj = JSON.parse(userData);
-      // Check if the user is an admin (you can modify this condition based on your user data structure)
-      if (userDataObj && userDataObj.result.userRole === 'Admin') {
-        next(); // Allow access for admins
-      } else {
-        next({ name: 'login' }); // Redirect to login for non-admin users
-      }
-    } else {
-      next({ name: 'login' }); // User is not authenticated, redirect to login
-    }
-  } else {
-    // Allow access to routes that don't require authentication
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((route) => route.meta.requiresAuth)) {
+//     // Check if the user is authenticated
+//     const userData = localStorage.getItem('userData');
+//     if (userData) {
+//       const userDataObj = JSON.parse(userData);
+//       // Check if the user is an admin (you can modify this condition based on your user data structure)
+//       if (userDataObj && userDataObj.result.userRole === 'Admin') {
+//         next(); // Allow access for admins
+//       } else {
+//         next({ name: 'login' }); // Redirect to login for non-admin users
+//       }
+//     } else {
+//       next({ name: 'login' }); // User is not authenticated, redirect to login
+//     }
+//   } else {
+//     // Allow access to routes that don't require authentication
+//     next();
+//   }
+// });
 
 export default router;

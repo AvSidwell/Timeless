@@ -6,7 +6,7 @@ import { cookies } from "vue3-cookies";
 
 // const baseUrl = "https://timeless-kast.onrender.com/";
 
-const baseUrl = "http://localhost:5000/";
+const baseUrl = "https://timeless-mcgx.onrender.com/";
 
 const state = {
   //Products/Shop
@@ -16,6 +16,7 @@ const state = {
   searchQuery: "",
   //Cart
   cart: [],
+  userData: {},
   sortBy: "",
   //User
   user: null,
@@ -88,6 +89,9 @@ const mutations = {
     state.user = user;
     state.isLoggedIn = true;
   },
+  SET_USER_DATA(state, userData) {
+    state.userData = userData;
+  },
   setToken(state, token) {
     state.token = token;
   },
@@ -129,9 +133,6 @@ const mutations = {
       state.products.splice(index, 1, updatedProduct);
     }
   },
-  // setUpdatedProduct(state, product) {
-  //   state.updatedProduct = product;
-  // },
   setDeletedProduct(state, product) {
     state.deletedProduct = product;
   },
@@ -140,9 +141,9 @@ const mutations = {
 const actions = {
   async getUser({ commit }) {
     try {
-      const response = await axios.get(`${baseUrl}user`);
-      commit("setUser", response.data);
-      console.log(response.data);
+      const response = await axios.get(`${baseUrl}users`);
+      commit("setUser", response.data.results);
+      console.log(response.data.results);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -173,197 +174,7 @@ const actions = {
       this.error = "Product not found";
     }
   },
-  ///CART
-  // async addToCart({ commit }, product) {
-  //   try {
-  //     const response = await axios.post(`${baseUrl}cart`, product);
-
-  //     if (response.status === 200) {
-  //       commit("updateCart", response.data);
-
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Added to Cart",
-  //         text: "The product has been added to your cart.",
-  //       });
-
-  //       return true;
-  //     } else {
-  //       console.error("Error adding to cart:", response.statusText);
-
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: "An error occurred while adding the product to your cart.",
-  //       });
-
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding to cart:", error);
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while adding the product to your cart.",
-  //     });
-
-  //     throw error;
-  //   }
-  // },
-
-  // async getCart({ commit }) {
-  //   try {
-  //     const response = await axios.get(`${baseUrl}cart`);
-  //     commit("setCart", response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching cart:", error);
-  //   }
-  // },
-  // async postCart({ commit }, cartData) {
-  //   try {
-  //     const response = await axios.post(`${baseUrl}cart`, cartData);
-  //     commit("setCart", response.data);
-  //   } catch (error) {
-  //     console.error("Error posting cart:", error);
-  //   }
-  // },
-  // async addToCart({ commit }, product) {
-  //   try {
-  //     const response = await axios.post(`${baseUrl}cart`, product);
-  //     commit("addToCart", response.data);
-  //   } catch (error) {
-  //     console.error("Error adding to cart:", error);
-  //     throw error;
-  //   }
-  // },
-  // async removeFromCart({ commit }, prodID) {
-  //   try {
-  //     await axios.delete(`${baseUrl}cart/${prodID}`);
-  //     commit("removeFromCart", prodID);
-  //   } catch (error) {
-  //     console.error("Error removing from cart:", error);
-  //   }
-  // },
-  // async updateCartItemQuantity({ commit }, { prodID, quantity }) {
-  //   try {
-  //     const response = await axios.patch(`${baseUrl}cart/${prodID}`, {
-  //       quantity,
-  //     });
-
-  //     if (response.status === 200) {
-  //       commit("updateCartItemQuantity", { prodID, quantity });
-  //     } else {
-  //       console.error(
-  //         "Error updating cart item quantity:",
-  //         response.statusText
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating cart item quantity:", error);
-  //     throw error;
-  //   }
-  // },
-  // async addToCart({ commit }, product) {
-  //   try {
-  //     const response = await axios.post(`${baseUrl}cart`, product);
-
-  //     if (response.status === 200) {
-  //       commit("addToCart", response.data);
-  //       await this.dispatch("getCart");
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Added to Cart",
-  //         text: "The product has been added to your cart.",
-  //       });
-
-  //       return true;
-  //     } else {
-  //       console.error("Error adding to cart:", response.statusText);
-
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: "An error occurred while adding the product to your cart.",
-  //       });
-
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding to cart:", error);
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while adding the product to your cart.",
-  //     });
-
-  //     throw error;
-  //   }
-  // },
-  // async addToCart({ commit, state }, product) {
-  //   try {
-  //     if (!state.cart) {
-  //       console.error("Cart is not initialized.");
-  //       return false;
-  //     }
-
-  //     const response = await axios.post(`${baseUrl}cart`, product);
-
-  //     if (response.status === 200) {
-  //       commit("addToCart", response.data);
-  //       console.log("addToCart", response.data);
-  //       await this.dispatch("getCart");
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Added to Cart",
-  //         text: "The product has been added to your cart.",
-  //       });
-
-  //   return true;
-  // } else {
-  //   console.error("Error adding to cart:", response.statusText);
-
-  //   Swal.fire({
-  //     icon: "error",
-  //     title: "Error",
-  //     text: "An error occurred while adding the product to your cart.",
-  //   });
-
-  //   return false;
-  // }
-  //   } catch (error) {
-  //     console.error("Error adding to cart:", error);
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while adding the product to your cart.",
-  //     });
-
-  //     throw error;
-  //   }
-  // },
-
-  // async getCart({ commit }) {
-  //   try {
-  //     const response = await axios.get(`${baseUrl}cart`);
-  //     commit("setCart", response.data);
-  //     console.log(response.data);
-  //     console.log("setCart", response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching cart:", error);
-  //   }
-  // },
-
-  // async removeFromCart({ commit }, prodID) {
-  //   try {
-  //     await axios.delete(`${baseUrl}cart/${prodID}`);
-  //     commit("removeFromCart", prodID);
-  //   } catch (error) {
-  //     console.error("Error removing from cart:", error);
-  //   }
-  // },
+ 
   async getCart({ commit }, userID) {
     try {
       const userData = JSON.parse(localStorage.getItem("userData"));
@@ -389,7 +200,6 @@ const actions = {
       if (response.status === 200) {
         commit("addToCart", response.data);
         console.log("addToCart", response.data);
-        await dispatch("getCart");
         Swal.fire({
           icon: "success",
           title: "Added to Cart",
@@ -421,25 +231,7 @@ const actions = {
       throw error;
     }
   },
-  // async removeItem({ commit }, cartID) {
-  //   try {
-  //     await axios.delete(`${baseUrl}cart/${cartID}`);
-  //     commit("removeItem", cartID);
-  //     console.log(cartID);
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "Item Removed",
-  //       text: "The item has been successfully removed from the cart.",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error removing from cart:", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "An error occurred while removing the item from the cart.",
-  //     });
-  //   }
-  // },
+ 
   async removeItem({ commit }, cartID) {
     try {
       await axios.delete(`${baseUrl}cart/${cartID}`);
@@ -454,16 +246,7 @@ const actions = {
     }
   },
 
-  // removeItem(state, crt) {
-  //   const existingProduct = state.cart.find(
-  //     (crt) => crt.prodID === crt.prodID
-  //   );
-  //   if (existingProduct) {
-  //     existingProduct.quantity += 1;
-  //   } else {
-  //     state.cart.push({ ...product, quantity: 1 });
-  //   }
-  // },
+ 
   async updateCartItemQuantity(
     { commit, state },
     { cartID, prodID, quantity }
@@ -492,36 +275,7 @@ const actions = {
       console.error("Error updating cart item quantity:", error);
     }
   },
-  // async updateCartItemQuantity(
-  //   { commit, state },
-  //   { cartID, prodID, quantity }
-  // ) {
-  //   try {
-  //     const response = await axios.patch(`${baseUrl}cart/${prodID}`, {
-  //       quantity,
-  //     });
-
-  //     if (response.status === 200) {
-  //       // commit("updateCartItemQuantity", { prodID, quantity });
-  //       const cartItem = state.cart.find(
-  //         (item) => item.cartID === cartID && item.prodID === prodID
-  //       );
-  //       if (cartItem) {
-  //         cartItem.quantity = quantity;
-  //         commit("setCart", [...state.cart]);
-  //       }
-  //       console.log(cartID);
-  //     } else {
-  //       console.error(
-  //         "Error updating cart item quantity:",
-  //         response.statusText
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating cart item quantity:", error);
-  //     throw error;
-  //   }
-  // },
+ 
 
   ///Product
   sortProducts({ commit, state }, { field, order }) {
@@ -626,42 +380,7 @@ const actions = {
     }
   },
 
-  // async loginUser({ commit }, credentials) {
-  //   try {
-  //     const response = await axios.post(`${baseUrl}login`, credentials);
-  //     // if (response.status === 200) {
-  //     // const { token, user } = response.data;
-  //     // commit("setToken", token);
-  //     // commit("setUser", user);
-  //     // const response = await axios.post(`${baseUrl}login`, credentials);
-  //     // if (response.status === 200) {
-  //     const { token, user  } = response.data;
-  //     console.log(response.data);
-  //     console.log(token);
-  //     commit("setToken", token);
-  //     commit("setUser", user);
-  //     localStorage.setItem("userToken", token);
-  //     localStorage.setItem("userData", JSON.stringify(this.credentials));
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "Login Successful",
-  //       text: "You have successfully logged in.",
-  //     });
-  //     // } else {
-  //     //   Swal.fire({
-  //     //     icon: "error",
-  //     //     title: "Error",
-  //     //     text: "An error occurred during login.",
-  //     //   });
-  //     // }
-  //   } catch (error) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: error.message,
-  //     });
-  //   }
-  // },
+ 
 
   logout({ commit }) {
     localStorage.removeItem("userToken");
@@ -670,72 +389,7 @@ const actions = {
     window.location.reload();
   },
 
-  // async registerUser({ commit }, userData) {
-  //   try {
-  //     const response = await axios.post(`${baseUrl}register`, userData);
-  //     const user = response.data;
-  //     commit("setUser", user);
-
-  //     if (response.status === 200) {
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Registration Successful",
-  //         text: "You have successfully registered.",
-  //       });
-  //       // Consider navigation in your component instead of here.
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Registration Failed",
-  //         text: "An error occurred during registration.",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: error.message,
-  //     });
-  //   }
-  // },
-
-  // async loginUser({ commit }, credentials) {
-  //   try {
-  //     const response = await axios.post(`${baseUrl}login`, credentials);
-  //     if (response.status === 200) {
-  //       const { token, user } = response.data;
-  //       commit("setToken", token);
-  //       commit("setUser", user);
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Login Successful",
-  //         text: "You have successfully logged in.",
-  //       });
-  //       // Consider navigation in your component instead of here.
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: "An error occurred during login.",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: error.message,
-  //     });
-  //   }
-  // }
-
-  //Handle Err
-  // showErrorMessage(_, message) {
-  //   Swal.fire({
-  //     icon: "error",
-  //     title: "Error",
-  //     text: message,
-  //   });
-  // },
+ 
 
   // Admin CRUD
   async editProduct() {
@@ -807,33 +461,6 @@ const actions = {
     }
   },
 
-  // async updateProduct({ commit }, { prodID, updatedProduct }) {
-  //   try {
-  //     const response = await axios.patch(`${baseUrl}products/${prodID}`, updatedProduct);
-  //     if (response.status === 200) {
-
-  //       commit("setupdateProduct", response.data);
-
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Product Updated",
-  //         text: "The product has been updated successfully.",
-  //       });
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Update Failed",
-  //         text: "An error occurred while updating the product.",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: error.message,
-  //     });
-  //   }
-  // },
   async addProduct({ commit }, newProduct) {
     try {
       const response = await axios.post(`${baseUrl}products`, newProduct);
@@ -907,34 +534,3 @@ export default createStore({
   mutations,
   actions,
 });
-// fetchUsers (context)
-// ocontext.commit("setUsers", result, results)
-// }catch(err)
-
-// context.set('setUser', {result, msg})
-// cookies.set.('realUser', {token, msg, })
-// use the cookies, get and
-// router.push({name:'home'})
-// import router from '@/router'
-// to esister there is no need for res only msg
-// alert that dispatch fetch/getUser function
-// router.push({name: 'login'})
-// or after the registration you can login
-// for token
-// function applyToken(token) {
-// if (token)
-// axios.derault
-// }
-// change the login text for login to Logout when user has successfully loggedin
-// remove cookie to logout make sure it resets to the log/registration page
-// set default img on userurl
-// make sure login page goes in first  in the router make a beforeEnter(): if(!)  function to make sure
-// once someone goes in to the home page and they do not have cookies re-route them to the login page
-// make use vue3-cookies sweetalert
-// make use of Vue LifeCycle Hooks to make login page log faster
-// on navbar  import {cookies} from useCookies
-// computed() { return this.$store.dispatch.state.user || cookies.get('getUser') }
-// grab data from cookies to make sure users stay logedin after refreshing the page
-// make use of v-show to limit the pages/router-Links/views shown in navbar
-// adminCheck() {
-// }
