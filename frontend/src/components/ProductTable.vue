@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-12 col-sm-12 mb-5">
+    <div class="row px-5">
+      <div class="col-12 col-md-6 col-sm-12 mb-5">
         <EditProductModal :product="editedProduct" @edit="editProduct" />
       </div>
-      <div class="col-12 col-sm-6 mb-5">
+      <div class="col-12 col-md-6 col-sm-12 mb-5">
         <ProductAdd />
       </div>
     </div>
@@ -25,11 +25,13 @@
           <td data-label="Price">{{ product.prodPRICE }}</td>
           <td>{{ product.prodQUANTITY }}</td>
           <td data-label="Quantity">
-            <img
-              data-label="img"
-              :src="productImages(product)[activeImageIndex]"
-              :alt="`Image ${activeImageIndex + 1}`"
-            />
+            <div class="image-gallery">
+           
+              <img
+                :src="productImages(product)[activeImageIndex]"
+                :alt="`Image ${activeImageIndex + 1}`"
+              />
+            </div>
           </td>
           <td data-label="CAT">{{ product.prodCAT }}</td>
           <td>
@@ -76,7 +78,7 @@ export default {
   computed: {
     productImages() {
       return (product) => {
-        if (product.prodIMG) {
+        if (product && product.prodIMG) {
           const parsedImages = JSON.parse(product.prodIMG);
           return Object.values(parsedImages).filter((img) => img !== "");
         }
@@ -91,27 +93,9 @@ export default {
     await this.$store.dispatch("getProducts");
   },
   methods: {
-    // async editProduct(updatedProduct) {
-    //   try {
-
-    //     const response = await axios.patch(
-    //       `https://timeless-mcgx.onrender.com/products/${updatedProduct.prodID}`,
-    //       updatedProduct
-    //     );
-
-    //     alert("Product updated successfully");
-    //     await this.$store.dispatch("getProducts");
-    //     this.editedProduct = null;
-    //   } catch (error) {
-    //     console.error("Error editing product:", error);
-    //   }
-    // },
-    // editProduct(product) {
-    //   this.$emit("edit-product", product);
-    // },
     editProductModal(product) {
-      this.editedProduct = { ...product }; // Set the selected product
-      this.$refs.editProductModal.show(); // Show the modal (use a ref)
+      this.editedProduct = { ...product };
+      this.$refs.editProductModal.show();
     },
     deleteProductModal(product) {
       Swal.fire({

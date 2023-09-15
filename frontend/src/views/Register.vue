@@ -1,5 +1,5 @@
 <template>
-  <div class="contain mb-5">
+  <div class="contain mb-5 p-auto">
     <h2>Register</h2>
     <form @submit.prevent="registerUser">
       <div class="form-group">

@@ -33,7 +33,7 @@
             </li>
 
             <li class="nav-item">
-              <router-link to="/Admin" class="nav-link">Admin</router-link>
+              <router-link v-show="isAdmin"  to="/Admin" class="nav-link">Admin</router-link>
             </li>
 
             <li class="nav-item">
@@ -44,7 +44,7 @@
               <router-link to="/Cart" class="nav-link">Cart</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/Users" class="nav-link">Users</router-link>
+              <router-link to="/Users" v-show="isAdmin"  class="nav-link">Users</router-link>
             </li>
 
             <div class="nav-item">
@@ -105,9 +105,30 @@ export default {
         const userData = JSON.parse(userDataJSON);
         return userData.result || {};
       }
-      return {};
-    },
-  },
+     return {};
+      },
+      
+      isAdmin() {
+  const userDataJSON = localStorage.getItem("userData");
+
+  if (userDataJSON) {
+    const userData = JSON.parse(userDataJSON);
+
+    // Assuming the role is stored in the `userRole` property
+    const userRole = userData.result.userRole;
+
+    if (userRole && userRole.toLowerCase() === "admin") {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+          }, 
+    
+    
+  // },
   methods: {
     logout() {
       this.$store.dispatch("logout");
